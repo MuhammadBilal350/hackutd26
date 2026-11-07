@@ -1,0 +1,178 @@
+{
+  "_meta": {
+    "description": "Camry generation info used for synthetic dash styling and for mileage/age context in the reliability score.",
+    "expected_miles_per_year": 12000,
+    "mileage_bands": [
+      {
+        "max_miles": 30000,
+        "penalty": 0,
+        "label": "very low"
+      },
+      {
+        "max_miles": 60000,
+        "penalty": 3,
+        "label": "low"
+      },
+      {
+        "max_miles": 100000,
+        "penalty": 7,
+        "label": "average"
+      },
+      {
+        "max_miles": 150000,
+        "penalty": 12,
+        "label": "high"
+      },
+      {
+        "max_miles": 200000,
+        "penalty": 18,
+        "label": "very high"
+      },
+      {
+        "max_miles": 250000,
+        "penalty": 24,
+        "label": "extreme"
+      },
+      {
+        "max_miles": null,
+        "penalty": 30,
+        "label": "beyond typical service life"
+      }
+    ],
+    "usage_adjustment": "Extra up to -6 points if miles are far above age x expected_miles_per_year; up to +3 back if well below (garage queen)."
+  },
+  "generations": [
+    {
+      "code": "XV30",
+      "years": [
+        2002,
+        2006
+      ],
+      "engines": [
+        "2AZ-FE 2.4L I4",
+        "1MZ-FE / 3MZ-FE 3.0-3.3L V6"
+      ],
+      "cluster_style": "analog white-face or Optitron, small amber/red odometer LCD in speedometer",
+      "odometer_format": "ODO 123456",
+      "known_issues": [
+        {
+          "issue": "2AZ-FE oil consumption (late units)",
+          "penalty": 3,
+          "engine": "I4"
+        },
+        {
+          "issue": "Melting/sticky dashboard (recall/warranty extension)",
+          "penalty": 1
+        }
+      ]
+    },
+    {
+      "code": "XV40",
+      "years": [
+        2007,
+        2011
+      ],
+      "engines": [
+        "2AZ-FE 2.4L I4",
+        "2GR-FE 3.5L V6",
+        "2AZ-FXE Hybrid"
+      ],
+      "cluster_style": "Optitron with blue/white illumination, odometer LCD at the bottom of the speedometer",
+      "odometer_format": "ODO 123456",
+      "known_issues": [
+        {
+          "issue": "2AZ-FE excessive oil consumption, 2007-2009 (warranty enhancement ZE7)",
+          "penalty": 6,
+          "years": [
+            2007,
+            2009
+          ],
+          "engine": "I4"
+        },
+        {
+          "issue": "Water pump leaks (2GR-FE V6)",
+          "penalty": 2,
+          "engine": "V6"
+        },
+        {
+          "issue": "Hybrid HV battery age on 2007-2011 Camry Hybrid",
+          "penalty": 4,
+          "hybrid_only": true
+        }
+      ]
+    },
+    {
+      "code": "XV50",
+      "years": [
+        2012,
+        2017
+      ],
+      "engines": [
+        "2AR-FE 2.5L I4",
+        "2GR-FE 3.5L V6",
+        "2AR-FXE Hybrid"
+      ],
+      "cluster_style": "Two analog gauges with a center 3.5\" or 4.2\" MID showing ODO/TRIP",
+      "odometer_format": "ODO 123456 mi",
+      "known_issues": [
+        {
+          "issue": "Torque converter shudder (2012-2014, TSB)",
+          "penalty": 2,
+          "years": [
+            2012,
+            2014
+          ]
+        },
+        {
+          "issue": "Dashboard cracking/melting reports",
+          "penalty": 1
+        }
+      ]
+    },
+    {
+      "code": "XV70",
+      "years": [
+        2018,
+        2024
+      ],
+      "engines": [
+        "A25A-FKS 2.5L I4",
+        "2GR-FKS 3.5L V6",
+        "A25A-FXS Hybrid"
+      ],
+      "cluster_style": "Two analog gauges with a 7\" color MID",
+      "odometer_format": "ODO 123456 mi",
+      "known_issues": [
+        {
+          "issue": "8-speed transmission hesitation/harsh shift complaints (2018-2019, software update)",
+          "penalty": 2,
+          "years": [
+            2018,
+            2019
+          ]
+        },
+        {
+          "issue": "Fuel pump recall 20V-012 / 20V-682 (some 2018-2020)",
+          "penalty": 2,
+          "years": [
+            2018,
+            2020
+          ]
+        }
+      ]
+    },
+    {
+      "code": "XV80",
+      "years": [
+        2025,
+        2026
+      ],
+      "engines": [
+        "A25A-FXS Hybrid (hybrid-only)"
+      ],
+      "cluster_style": "Fully digital 7\" or 12.3\" display",
+      "odometer_format": "ODO 12345 mi",
+      "known_issues": []
+    }
+  ]
+}
