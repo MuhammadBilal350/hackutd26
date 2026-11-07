@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 dataset/**/predictions.json
 .env
+captures/

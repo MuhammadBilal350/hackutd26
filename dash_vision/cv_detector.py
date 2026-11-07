@@ -202,26 +202,29 @@ def resolve(glyph: str, color: str) -> str:
     return glyph
 
 
-def detect(image_path: str | Path) -> dict:
-    bgr = cv2.imread(str(image_path))
-    if bgr is None:
-        raise FileNotFoundError(image_path)
+def detect_array(bgr: np.ndarray) -> tuple[dict, np.ndarray]:
+    """Detect lit lights in a BGR image (file or camera frame). Returns (reading, annotated image)."""
     bgr = to_work(bgr)
+    shown = bgr.copy()
     found: dict[str, dict] = {}
     rejected = []
     for b in blobs(bgr):
         glyph, dist = classify(feature(b["crop"]))
         lid = resolve(glyph, b["color"])
+        x, y, w, h = b["bbox"]
         if dist > LOW:
             rejected.append({"bbox": b["bbox"], "color": b["color"], "closest": lid, "distance": round(dist, 3)})
+            cv2.rectangle(shown, (x - 3, y - 3), (x + w + 3, y + h + 3), (0, 0, 255), 1)
             continue
         conf = "high" if dist <= HIGH else "medium" if dist <= MEDIUM else "low"
+        cv2.rectangle(shown, (x - 3, y - 3), (x + w + 3, y + h + 3), (0, 255, 0), 2)
+        cv2.putText(shown, f"{lid} ({conf})", (x, max(12, y - 6)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
         entry = {"id": lid, "color": b["color"], "confidence": conf,
-                 "evidence": f"{b['color']} blob at x={b['bbox'][0]} y={b['bbox'][1]}, shape distance {dist:.2f}"}
+                 "evidence": f"{b['color']} blob at x={x} y={y}, shape distance {dist:.2f}"}
         if lid not in found or dist < found[lid]["_d"]:
             found[lid] = {**entry, "_d": dist}
     lights = [{k: v for k, v in e.items() if k != "_d"} for e in found.values()]
-    return {
+    reading = {
         "is_dashboard": True,
         "likely_bulb_check": len(lights) >= 10,
         "odometer": {"readable": False, "value": 0, "unit": "unknown", "raw_text": ""},
@@ -230,17 +233,19 @@ def detect(image_path: str | Path) -> dict:
         "image_issues": "",
         "_rejected_blobs": rejected,
     }
+    return reading, shown
+
+
+def detect(image_path: str | Path) -> dict:
+    bgr = cv2.imread(str(image_path))
+    if bgr is None:
+        raise FileNotFoundError(image_path)
+    return detect_array(bgr)[0]
 
 
 def debug_image(image_path: str | Path, out_path: str | Path) -> None:
-    """Save a copy of the photo with each detection boxed and labeled."""
-    bgr = to_work(cv2.imread(str(image_path)))
-    for b in blobs(bgr):
-        glyph, dist = classify(feature(b["crop"]))
-        lid = resolve(glyph, b["color"])
-        x, y, w, h = b["bbox"]
-        ok = dist <= LOW
-        c = (0, 255, 0) if ok else (0, 0, 255)
-        cv2.rectangle(bgr, (x - 3, y - 3), (x + w + 3, y + h + 3), c, 2)
-        cv2.putText(bgr, f"{lid if ok else '?'} {dist:.2f}", (x, y - 6), cv2.FONT_HERSHEY_SIMPLEX, 0.45, c, 1)
-    cv2.imwrite(str(out_path), bgr)
+    """Save a copy of the photo with detections boxed: green = light found, red = shape rejected."""
+    bgr = cv2.imread(str(image_path))
+    if bgr is None:
+        raise FileNotFoundError(image_path)
+    cv2.imwrite(str(out_path), detect_array(bgr)[1])

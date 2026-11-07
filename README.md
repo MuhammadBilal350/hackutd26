@@ -22,6 +22,7 @@ mileage (typed in) ────────────────────�
 | `dash_vision/icon_refs/<light_id>/` | Optional: drop real cropped icon photos here to teach the OpenCV detector real dashes |
 | `dash_vision/detector.py` | Optional Claude vision detector (`--detector claude`, needs `ANTHROPIC_API_KEY`; also reads the odometer) |
 | `dash_vision/reliability.py` | Scoring: mileage band + usage vs. age, light penalties (flashing multiplier, VSC-with-CEL dedup, compound faults), generation known issues |
+| `dash_vision/camera.py` | Webcam app: live preview, SPACE to capture, verdict window |
 | `dash_vision/analyze.py` | CLI: one photo + mileage → lights + score (`--debug out.jpg` saves the photo with detections boxed) |
 | `dash_vision/generate_dataset.py` | Renders labeled synthetic Camry clusters, with and without faults, plus photo-style augmentation |
 | `dash_vision/evaluate.py` | Per-light precision/recall and score error against a labeled set |
@@ -37,6 +38,14 @@ pip install -r requirements.txt
 ```
 
 No API key is needed.
+
+### Test with your camera
+
+```
+python dash_vision/camera.py --miles 142000 --year 2009
+```
+
+Point the webcam at a dashboard (or at a dash photo on your phone), press **SPACE** to take the photo, and a window shows the lights it found plus the score, grade and repair estimate. Any key goes back to the camera; **Q** quits. Every capture and its result are saved to `captures/` (not committed). Use `--camera 1` for a second or USB camera, or `--image photo.jpg` to judge a file the same way.
 
 ### Use
 

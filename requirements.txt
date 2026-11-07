@@ -1,4 +1,4 @@
-opencv-python-headless>=4.8
+opencv-python>=4.8
 numpy>=1.26
 pillow>=10
 # optional, only for --detector claude:
