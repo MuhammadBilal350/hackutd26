@@ -1,2 +1,5 @@
-anthropic>=2.6
+opencv-python-headless>=4.8
+numpy>=1.26
 pillow>=10
+# optional, only for --detector claude:
+# anthropic>=2.6
