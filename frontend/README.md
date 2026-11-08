@@ -23,11 +23,11 @@ Home, forecast, inspection uploads, report, maintenance, workshops, financing, d
 
 The core layout uses React Native Web View, Text, Pressable, TextInput, and Switch. Browser-specific file inputs, SVG icons, charts, and CSS handle web presentation. This source is prepared for browser rendering; native iOS/Android packaging would require platform adapters for those web-specific pieces.
 
-All listings and vehicle data are illustrative. Inspection returns a fixed demo report; photos remain in browser memory and are not uploaded. Booking and price actions show local confirmations. Voice is animated, with preset demo responses and no audio capture. The map is illustrative; its Open in Maps link searches Google Maps. There are no backend requests, deployment steps, or real reservations.
+Vehicle, financing, and dealer data remain illustrative. Inspection returns a fixed demo report; photos remain in browser memory. Booking and price actions show local confirmations. Voice has preset demo responses with no audio capture. Workshop search now uses the shared original Geoapify integration: configure VITE_GEOAPIFY_API_KEY in .env.local, then select Service → Workshop & Tow → Find nearby workshops. It requests location only on that action and displays real provider listings, markers, distances, calls, and directions. No reservations or deployments are made. See ../docs/integration.md for setup and external-service boundaries.
 
 Demo fixtures and financing logic live in `src/domain.ts`; shared components are in `src/ui.tsx`; screen views are in `src/screens.tsx`; navigation and theme state are in `src/App.tsx`.
 
 ## Verification
 
-Production build and seven automated checks cover financing edge cases, photo requirements, navigation, appointment selection, and theme switching. The home screen was visually checked in the in-app browser after repairing the preview server and correcting React Native Web text selectors. Full visual parity across all screens remains unverified.
+Production builds and automated checks cover the frontend flows plus shared map filtering, routing fallback, input validation, and browser search states. Root CI also checks the existing mobile app lint/types and SpacetimeDB module types. External provider availability and native device sessions require separate live environments.
 
