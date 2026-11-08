@@ -39,7 +39,52 @@ pip install -r requirements.txt
 
 No API key is needed.
 
+On Windows PowerShell, activation is optional. You can run the environment's
+Python directly (also avoids PowerShell execution-policy errors):
+
+```powershell
+.\.venv\Scripts\python.exe dash_vision/analyze.py dataset/synthetic/images/camry_0021.jpg --miles 98691 --year 2021
+.\.venv\Scripts\python.exe dash_vision/camera.py --miles 142000 --year 2009
+```
+
+Run these from the repository root. The command-line tools also support module
+execution, for example `python -m dash_vision.analyze photo.jpg --miles 142000`.
+The detector can be imported as `from dash_vision.cv_detector import detect`.
+
+### Verify the installation
+
+```
+python -m unittest discover -s tests -v
+python -m dash_vision.evaluate
+```
+
+The smoke tests cover script and module startup, importing the detector, finding
+the default dataset from another working directory, and analyzing a bundled photo
+with an annotated output. Evaluation reports detection accuracy separately; it is
+not a claim of perfect detection. Camera windows require a desktop session and
+the live camera mode requires an available webcam.
+
 ### Test with your camera
+
+For the browser interface with photo upload, live camera preview, optional
+continuous analysis and **stats-only results**, run:
+
+```powershell
+.\.venv\Scripts\python.exe -m dash_vision.web
+```
+
+Open `http://127.0.0.1:8765` in Chrome or Edge. Wait for the offline detector to
+finish warming up. Upload a dashboard photo and click **Analyze dashboard**, or
+choose **Live camera**, allow camera access, and use **Capture & analyze**.
+Enable **Auto-analyze** for another reading two seconds after each completed
+analysis. **Stop**, changing tabs, or leaving the page releases the camera.
+The camera preview is for aiming; results and exported JSON contain statistics
+only. Images stay in memory on the local server and are not saved by this UI.
+Use **Export stats** to save a JSON report. Add `--port 8766` if the port is busy.
+Mileage must be entered manually. The offline detector does not read the odometer
+or guarantee an image is a dashboard; no detected lights is not a health check.
+
+The older OpenCV desktop window remains available with:
 
 ```
 python dash_vision/camera.py --miles 142000 --year 2009
@@ -76,3 +121,18 @@ Grades: A ≥ 90, B ≥ 80, C ≥ 70, D ≥ 55, F below. Penalty values are star
 - A still photo can't show a flashing light. Pass `--flashing` when the seller reports one.
 - All lights glow for about 3 s at key-on (bulb check). The detector flags this; retake those photos with the engine running.
 - The synthetic icons are simplified versions of the ISO symbols. Accuracy on them doesn't guarantee accuracy on real photos, so add real labeled photos to `dataset/real/` and evaluate on those as well.
+
+## Exterior inspection (US / USD)
+
+The exterior camera/upload workflow is available alongside dashboard analysis.
+See [exterior setup and training](exterior_vision/README.md) and
+[measured model results](exterior_vision/MODEL_CARD.md).
+
+```powershell
+python -m exterior_vision.web
+```
+
+The initial public-data checkpoint is research-only (0.0367 mAP50). Condition
+ratings and damage-based price adjustments remain withheld until its evaluation
+gate passes. Current USD values require real recent comparables or a configured
+market-data provider. Mechanical durability is not inferred from exterior photos.
