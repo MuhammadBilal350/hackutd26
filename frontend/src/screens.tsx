@@ -1,8 +1,10 @@
+import Assistant from './ai/Assistant';
+import { setFinanceContext } from './ai/context';
 import Inspection from './vision/Inspection';
 import VisionReport from './vision/VisionReport';
 import type { InspectionResult } from './vision/client';
 import WorkshopFinder from './maps/WorkshopFinder';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Switch } from 'react-native-web';
 import { CarFront, Camera, Gauge, Droplet, TriangleAlert, Tag, ChevronRight, Phone, CalendarDays, Minus, Plus, Mic } from 'lucide-react';
 import { Box, Txt, Card, Row, Header, Label, Button, Tap, Segments, Progress, Badge, IconBox, ScoreRing, Toyota, red } from './ui';
@@ -49,6 +51,7 @@ export function Shop({go}:ScreenProps) {
   const [category,setCategory]=useState('SUV');const [term,setTerm]=useState('60 mo');const [credit,setCredit]=useState('Good');
   const [price,setPrice]=useState('36000');const [down,setDown]=useState('5000');const [apr,setApr]=useState(6.9);
   const result=price.trim()&&down.trim()?finance(Number(price),Number(down),apr,parseInt(term)):null;
+  useEffect(()=>setFinanceContext({category,price,downPayment:down,interestRate:apr,term,creditScore:credit,estimate:result}),[category,price,down,apr,term,credit]);
   return <><Header title="New car"/><Segments items={['Sedan','SUV','Truck','Minivan']} value={category} onChange={setCategory}/>
     <Card style={{padding:'0 16px'}}><div className="field"><label htmlFor="price">Car price</label><span className="currency">$</span><input id="price" inputMode="decimal" type="number" min="0" value={price} onChange={e=>setPrice(e.target.value)}/></div><div className="field"><label htmlFor="down">Down payment</label><span className="currency">$</span><input id="down" inputMode="decimal" type="number" min="0" value={down} onChange={e=>setDown(e.target.value)}/></div><Row style={{padding:'13px 0',justifyContent:'space-between'}}><Txt>Interest rate</Txt><Row style={{gap:10}}><Txt>{apr.toFixed(2)}%</Txt><Box ui="stepper"><Tap label="Decrease interest rate" onPress={()=>setApr(Math.max(0,Math.round((apr-.25)*100)/100))}><Minus size={16}/></Tap><Tap label="Increase interest rate" onPress={()=>setApr(Math.min(30,Math.round((apr+.25)*100)/100))}><Plus size={16}/></Tap></Box></Row></Row></Card>
     <Box><Label>LOAN LENGTH</Label><Segments items={['36 mo','48 mo','60 mo','72 mo']} value={term} onChange={setTerm}/></Box>
@@ -61,11 +64,4 @@ export function Dealers({notify}:ScreenProps) {return <><Header title="Dealers" 
   <Card style={{padding:20,border:`2px solid ${red}`,gap:16}}><Box><Txt style={{color:red,fontSize:12,fontWeight:700,letterSpacing:.4}}>BEST PRICE</Txt><Row style={{justifyContent:'space-between',marginTop:5}}><Txt style={{fontSize:20,fontWeight:700}}>Lakeview Toyota</Txt><Txt style={{fontSize:28,fontWeight:700,letterSpacing:-.7}}>$34,180</Txt></Row><Row style={{justifyContent:'space-between',marginTop:4}}><Txt ui="muted">4.2 mi · 3 in stock</Txt><Txt style={{color:'var(--green)',fontSize:12,fontWeight:600}}>$930 below avg.</Txt></Row></Box><Row style={{gap:10}}><Box style={{flex:1}}><Button secondary label="Call Lakeview Toyota" onPress={()=>notify('Lakeview Toyota','Demo dealer listing. A verified phone number will be provided by the dealer integration.')}><Phone size={17} style={{verticalAlign:'middle',marginRight:8}}/>Call</Button></Box><Box style={{flex:1.4}}><Button onPress={()=>notify('Price selected','$34,180 at Lakeview Toyota. This is a demo offer; no real reservation has been placed.')}>Lock price</Button></Box></Row></Card>
   <Box><Label>OTHER DEALERS</Label><Card>{dealers.map(([name,price,distance,difference])=><Tap label={`View ${name} offer`} key={name} ui="list-row" onPress={()=>notify(name,`${price} · ${distance}. Demo pricing; availability is illustrative.`)} style={{justifyContent:'space-between'}}><Box><Txt>{name}</Txt><Txt ui="muted">{distance}</Txt></Box><Box style={{alignItems:'flex-end'}}><Txt style={{fontWeight:600}}>{price}</Txt><Txt ui="muted" style={{fontSize:13}}>{difference}</Txt></Box></Tap>)}</Card></Box>
 </>;}
-export function Voice() {
-  const [listening,setListening]=useState(true);const [question,setQuestion]=useState('Is the amber engine light serious?');const [answer,setAnswer]=useState('Usually not urgent. Tighten the fuel cap first. If it stays on a few days, book a check.');
-  const ask=(q:string)=>{setQuestion(q);setListening(false);setAnswer(q==='When is my next oil change?'?'Your next oil change is due in 1,240 miles, at about 85,450 miles on the dash.':"Your demo score is 7.4 out of 10: good shape overall, with four items to check. Start with tire pressure and the amber engine light.");};
-  return <><div className="voice-title"><strong>Voice guide</strong><small>Ask about your car</small></div><Box style={{gap:10,marginTop:-10}}><Box ui="bubble" className="user"><Txt style={{color:'white'}}>{question}</Txt></Box><Box ui="bubble"><Txt>{answer}</Txt></Box></Box>
-    <Box style={{alignItems:'center',gap:10}}><div className={`voice-orbit ${listening?'active':''}`}><button className="voice-button" aria-label={listening?'Pause voice demo':'Start voice demo'} onClick={()=>setListening(!listening)}><Mic size={39}/></button></div><div className={`wave ${listening?'active':''}`} aria-hidden="true">{Array.from({length:15},(_,i)=><i key={i} style={{height:6+((i*7)%25),animationDelay:`${i*.075}s`}}/>)}</div><Txt style={{fontSize:20,fontWeight:600}}>{listening?'Listening…':'Tap to speak'}</Txt></Box>
-    <Box style={{gap:9,alignItems:'center',marginTop:12}}>{['When is my next oil change?','Explain my score'].map(q=><button className="prompt" onClick={()=>ask(q)} key={q}>{q}</button>)}</Box><p className="demo-note">Voice preview · no microphone recording or live AI.</p>
-  </>;
-}
+export function Voice({inspection}:ScreenProps) {return <Assistant inspection={inspection}/>;}
