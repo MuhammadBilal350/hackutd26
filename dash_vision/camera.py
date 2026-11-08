@@ -25,8 +25,12 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-import cv_detector
-from reliability import LIGHTS, score_dash
+if __package__:
+    from . import cv_detector
+    from .reliability import LIGHTS, score_dash
+else:
+    import cv_detector
+    from reliability import LIGHTS, score_dash
 
 ROOT = Path(__file__).resolve().parent.parent
 CAPTURES = ROOT / "captures"
