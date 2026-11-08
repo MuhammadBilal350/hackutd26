@@ -35,3 +35,7 @@ export async function getToyotaVoiceToken() {
   const connection = await getSpacetimeConnection();
   return connection.procedures.createToyotaVoiceToken({});
 }
+
+// Partner map/chat database is independent of the existing private voice database.
+export { connectToSpacetimeDB, sendSpacetimeMessage, setSpacetimeName, saveSpacetimeServiceCenter } from './partner-spacetime';
+export type { SavedServiceCenter, ChatMessage, SpacetimeStatus } from './partner-spacetime';

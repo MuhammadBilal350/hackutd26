@@ -27,3 +27,4 @@ exterior_runs/
 !**/.env.example
 *.pem
 *.key
+.vercel

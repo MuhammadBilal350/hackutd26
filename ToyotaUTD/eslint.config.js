@@ -5,6 +5,6 @@ const expoConfig = require('eslint-config-expo/flat');
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ['dist/*', 'src/db/module_bindings/**'],
+    ignores: ['dist/*', 'src/db/module_bindings/**', 'src/module_bindings/**', 'spacetime-chat/**'],
   },
 ]);
