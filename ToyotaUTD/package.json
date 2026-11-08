@@ -50,7 +50,8 @@
     "android": "node --env-file=.env.local ./node_modules/expo/bin/cli start --android",
     "ios": "node --env-file=.env.local ./node_modules/expo/bin/cli start --ios",
     "web": "node --env-file=.env.local ./node_modules/expo/bin/cli start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "typecheck": "tsc --noEmit"
   },
   "private": true
 }
