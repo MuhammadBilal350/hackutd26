@@ -4,3 +4,9 @@ __pycache__/
 dataset/**/predictions.json
 .env
 captures/
+.venv-exterior/
+.cache-exterior/
+exterior_data/
+exterior_models/
+exterior_runs/
+.tls-exterior/
