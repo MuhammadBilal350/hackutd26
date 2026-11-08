@@ -86,4 +86,5 @@ html[data-theme=dark] body{background:radial-gradient(ellipse at 40% 10%,#272b35
 .workshop-actions a{display:inline-flex;gap:6px;align-items:center;padding:8px 12px;border-radius:20px;background:var(--glass-tint);color:var(--text);text-decoration:none;border:1px solid var(--glass-edge)}
 .workshop-actions span{color:var(--muted)}
 .workshop-map .leaflet-control-attribution{font-size:9px}
+.photo-action{padding:9px 12px;border-radius:22px;color:var(--red);font-size:14px;cursor:pointer}
 
