@@ -45,7 +45,7 @@ type ConversationMessage = {
   content: string;
 };
 
-async function postJSON(path: string, body: unknown) {
+async function postJSON(path: string, body: unknown, signal?: AbortSignal) {
   if (!API_BASE) {
     throw new Error(
       "Set EXPO_PUBLIC_API_URL to your Vercel deployment origin and restart Expo."
@@ -59,6 +59,7 @@ async function postJSON(path: string, body: unknown) {
       Accept: "application/json",
     },
     body: JSON.stringify(body),
+    signal,
   });
 
   const raw = await response.text();
@@ -210,11 +211,17 @@ export default function HomeScreen() {
   const [savedServiceCenters, setSavedServiceCenters] = useState<SavedServiceCenter[]>([]);
   const [autoSpeak, setAutoSpeak] = useState(true);
 
+  // Keep prior turns for model context while showing only the latest exchange.
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
+  const [visibleConversation, setVisibleConversation] = useState<
+    ConversationMessage[]
+  >([]);
 
   const [speechBase64, setSpeechBase64] = useState("");
   const [speechBusy, setSpeechBusy] = useState(false);
   const [speechStatus, setSpeechStatus] = useState("");
+  const [pendingUserMessage, setPendingUserMessage] = useState("");
+  const speechRequestController = useRef<AbortController | null>(null);
 
   const [originalPrice, setOriginalPrice] = useState("28000");
   const [currentValue, setCurrentValue] = useState("16000");
@@ -237,6 +244,31 @@ export default function HomeScreen() {
 
   const [audioPlayer, setAudioPlayer] = useState<any>(null);
   const webAudioPlayer = useRef<HTMLAudioElement | null>(null);
+
+  function cancelSpeech() {
+    speechRequestController.current?.abort();
+    speechRequestController.current = null;
+
+    const webPlayer = webAudioPlayer.current;
+    if (webPlayer) {
+      webPlayer.pause();
+      webPlayer.currentTime = 0;
+      webAudioPlayer.current = null;
+    }
+
+    try {
+      audioPlayer?.pause();
+      if (audioPlayer) {
+        void audioPlayer.seekTo(0).catch(() => {});
+      }
+    } catch {
+      // Ignore playback cleanup errors so a new question can still be sent.
+    }
+
+    setSpeechBase64("");
+    setSpeechBusy(false);
+    setSpeechStatus("");
+  }
 
   // Keep message persistence in SpacetimeDB without rendering database history
   // in the app. `conversation` below contains only this session's messages.
@@ -355,13 +387,17 @@ export default function HomeScreen() {
     speakResponse = autoSpeak
   ) {
     const userQuestion = (questionOverride ?? question).trim();
+    const userMessage = userQuestion || "Review this photo.";
 
     if (!userQuestion && !imageDataUrl) {
       Alert.alert("Add a question", "Ask about your vehicle or add a photo.");
       return;
     }
 
+    cancelSpeech();
     setBusy(true);
+    setVisibleConversation([]);
+    setPendingUserMessage(userMessage);
     setAnalysis("");
     setAssistantError("");
 
@@ -416,7 +452,6 @@ export default function HomeScreen() {
         history: conversation.slice(-8),
       });
 
-      const userMessage = userQuestion || "Review this photo.";
       const assistantMessage = String(data.answer || "");
 
       setAnalysis(assistantMessage);
@@ -430,44 +465,54 @@ export default function HomeScreen() {
       setConversation((previous) =>
         [...previous, ...conversationUpdates].slice(-8)
       );
+      setVisibleConversation(conversationUpdates);
 
       // Save both messages. If the database is unavailable, the AI response
       // still remains available in the app.
-      await saveChatMessage("user", userMessage);
-
-      if (assistantMessage) {
-        await saveChatMessage("assistant", assistantMessage);
-      }
+      // Persistence is best effort and should not hold up the next turn.
+      void (async () => {
+        await saveChatMessage("user", userMessage);
+        if (assistantMessage) {
+          await saveChatMessage("assistant", assistantMessage);
+        }
+      })();
 
       if (speakResponse && assistantMessage) {
-        await generateSpeech(assistantMessage);
+        void generateSpeech(assistantMessage);
       }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Analysis failed.";
 
+      setVisibleConversation([{ role: "user", content: userMessage }]);
       setAssistantError(message);
       Alert.alert("Analysis error", message);
     } finally {
       setMapLoading(false);
+      setPendingUserMessage("");
       setBusy(false);
     }
   }
 
   async function generateSpeech(text: string) {
+    speechRequestController.current?.abort();
+    const controller = new AbortController();
+    speechRequestController.current = controller;
     setSpeechBusy(true);
     setSpeechStatus("Preparing spoken answer…");
 
     try {
-      const data = await postJSON("/api/speak", { text });
+      const data = await postJSON("/api/speak", { text }, controller.signal);
+      if (controller.signal.aborted) return;
 
       if (typeof data.audioBase64 !== "string" || !data.audioBase64) {
         throw new Error("The speech service returned no audio.");
       }
 
       setSpeechBase64(data.audioBase64);
-      await playSpeech(data.audioBase64);
+      await playSpeech(data.audioBase64, controller.signal);
     } catch (error) {
+      if (controller.signal.aborted) return;
       const message =
         error instanceof Error ? error.message : "Could not generate speech.";
 
@@ -475,15 +520,19 @@ export default function HomeScreen() {
       setAssistantError(message);
       Alert.alert("Voice error", message);
     } finally {
-      setSpeechBusy(false);
+      if (speechRequestController.current === controller) {
+        speechRequestController.current = null;
+        setSpeechBusy(false);
+      }
     }
   }
 
-  async function playSpeech(base64 = speechBase64) {
+  async function playSpeech(base64 = speechBase64, signal?: AbortSignal) {
     if (!base64) {
       setSpeechStatus("There is no spoken answer to play yet.");
       return;
     }
+    if (signal?.aborted) return;
 
     if (Platform.OS === "web") {
       try {
@@ -493,7 +542,9 @@ export default function HomeScreen() {
         webAudioPlayer.current = player;
 
         await player.play();
-        setSpeechStatus("Speaking…");
+        if (!signal?.aborted && webAudioPlayer.current === player) {
+          setSpeechStatus("Speaking…");
+        }
       } catch {
         setSpeechStatus(
           "Playback was blocked. Tap “Play spoken answer” and check your device volume."
@@ -508,12 +559,14 @@ export default function HomeScreen() {
         allowsRecording: false,
         playsInSilentMode: true,
       });
+      if (signal?.aborted) return;
 
       const fileUri = `${FileSystem.cacheDirectory}toyota-response.mp3`;
 
       await FileSystem.writeAsStringAsync(fileUri, base64, {
         encoding: FileSystem.EncodingType.Base64,
       });
+      if (signal?.aborted) return;
 
       try {
         audioPlayer?.remove();
@@ -538,6 +591,7 @@ export default function HomeScreen() {
 
   async function startRecording() {
     try {
+      cancelSpeech();
       await setAudioModeAsync({
         allowsRecording: true,
         playsInSilentMode: true,
@@ -814,7 +868,12 @@ export default function HomeScreen() {
         </View>
 
         {busy && (
-          <ActivityIndicator color="#55D6BE" style={styles.loader} />
+          <View style={styles.thinkingRow}>
+            <ActivityIndicator color="#55D6BE" />
+            <Text style={styles.muted}>
+              {mapLoading ? "Checking nearby service options…" : "Thinking…"}
+            </Text>
+          </View>
         )}
 
         {assistantError ? (
@@ -825,10 +884,40 @@ export default function HomeScreen() {
           </View>
         ) : null}
 
+        {visibleConversation.length > 0 || pendingUserMessage ? (
+          <View style={styles.conversationBox}>
+            <Text style={styles.answerTitle}>CONVERSATION</Text>
+            {visibleConversation.map((message, index) => (
+              <View
+                key={`${index}-${message.role}`}
+                style={[
+                  styles.chatBubble,
+                  message.role === "user"
+                    ? styles.userBubble
+                    : styles.assistantBubble,
+                ]}
+              >
+                <Text style={styles.bubbleLabel}>
+                  {message.role === "user" ? "YOU" : "ASSISTANT"}
+                </Text>
+                <Text style={styles.answerText}>{message.content}</Text>
+              </View>
+            ))}
+            {pendingUserMessage ? (
+              <>
+                <View style={[styles.chatBubble, styles.userBubble]}>
+                  <Text style={styles.bubbleLabel}>YOU</Text>
+                  <Text style={styles.answerText}>{pendingUserMessage}</Text>
+                </View>
+                <Text style={styles.typingText}>Assistant is thinking…</Text>
+              </>
+            ) : null}
+          </View>
+        ) : null}
+
         {analysis ? (
           <View style={styles.answerBox}>
-            <Text style={styles.answerTitle}>LATEST VEHICLE ANALYSIS</Text>
-            <Text style={styles.answerText}>{analysis}</Text>
+            <Text style={styles.answerTitle}>VOICE REPLY</Text>
 
             <AppButton
               title={
@@ -1258,6 +1347,47 @@ const styles = StyleSheet.create({
   },
   loader: {
     marginTop: 15,
+  },
+  thinkingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginTop: 16,
+  },
+  conversationBox: {
+    marginTop: 17,
+    padding: 14,
+    backgroundColor: "#0A1422",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#2B4659",
+    gap: 10,
+  },
+  chatBubble: {
+    maxWidth: "92%",
+    padding: 12,
+    borderRadius: 12,
+  },
+  userBubble: {
+    alignSelf: "flex-end",
+    backgroundColor: "#183A3B",
+  },
+  assistantBubble: {
+    alignSelf: "flex-start",
+    backgroundColor: "#17243A",
+  },
+  bubbleLabel: {
+    color: "#55D6BE",
+    fontSize: 9,
+    fontWeight: "900",
+    letterSpacing: 1.5,
+    marginBottom: 6,
+  },
+  typingText: {
+    color: "#8C9CB1",
+    fontSize: 12,
+    fontStyle: "italic",
+    paddingHorizontal: 4,
   },
   answerBox: {
     marginTop: 17,
