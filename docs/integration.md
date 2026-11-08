@@ -19,7 +19,7 @@ Service → Workshop & Tow → Find nearby workshops asks for location on user a
 
 ## Shared logic and preserved services
 
-`shared/roadside.ts` owns search validation, distance calculations, deduplication, Toyota filtering, and route ordering. `ToyotaUTD/src/lib/roadsideFinder.ts` retains the existing exported functions and obtains location through Expo. The web adapter uses browser geolocation. Neither app persists search results to SpacetimeDB; the original map branch did not implement that contract. The existing ElevenLabs/SpacetimeDB voice integration remains in ToyotaUTD; the new web voice screen remains a labeled preview. Photo analysis, service bookings, and dealer offers in the new frontend remain labeled demos.
+`shared/roadside.ts` owns search validation, distance calculations, deduplication, Toyota filtering, and route ordering. `ToyotaUTD/src/lib/roadsideFinder.ts` retains the existing exported functions and obtains location through Expo. The web adapter uses browser geolocation. Neither app persists search results to SpacetimeDB; the original map branch did not implement that contract. The existing ElevenLabs/SpacetimeDB voice integration remains in ToyotaUTD; the new web voice screen remains a labeled preview. Service bookings and dealer offers remain labeled demos. Photo analysis is connected to the original vision branch as described below.
 
 ## Checks
 
@@ -36,3 +36,26 @@ npx --no-install tsc --noEmit
 ```
 
 `.github/workflows/integration.yml` runs these frontend, native, and backend checks on main/integration pushes and PRs, and saves the web build as an artifact. These checks do not publish a database or deploy an app. Device builds, live Geoapify responses, and ElevenLabs sessions require their configured external environments and remain separate from deterministic CI tests.
+
+## Vision integration
+
+The `vision` branch is preserved with a merge commit, including both original standalone interfaces, the synthetic dataset, and model/training documentation. Two README/ignore-rule conflicts were resolved by keeping both sets of content.
+
+Install the lightweight dashboard/gateway dependencies and start the gateway in a second terminal:
+
+```sh
+python -m pip install -r requirements.txt cryptography
+npm run vision
+```
+
+The default API is `http://127.0.0.1:8780`. `npm run dev` proxies `/api/vision` from the web origin to this gateway. `VISION_PROXY_TARGET` can change the local target; `VITE_VISION_API_BASE` configures the web API path for a hosted reverse proxy. Alternate frontend ports must be listed in the gateway's `VISION_ALLOWED_ORIGINS` environment variable. Production hosting needs an actual Python vision service and same-origin reverse proxy; this merge does not provision one or deploy weights.
+
+Inspect uploads real dashboard/exterior photo bytes with entered year, mileage, and exterior angle. The dashboard endpoint invokes the original offline OpenCV detector and scoring rules. Its score and mileage update both Report and Home. Service-history text stays in memory as notes and is not claimed to affect the detector.
+
+The exterior endpoint invokes the original damage detector only when its checkpoint is installed. Missing checkpoints return an explicit unavailable state; checkpoints that fail the original quality gate cannot produce a rating. One exterior photo covers one angle, and missing angles remain visible. Dashboard success is retained when exterior is unavailable, and the reverse partial-success case shows the dashboard as unavailable, never as zero warning lights. No detector result is a mechanical diagnosis.
+
+```sh
+npm run test:vision
+```
+
+The CI vision job runs both original Python suites plus real loopback gateway tests using the bundled synthetic image. Frontend tests cover actual upload bodies, partial failures, report/Home synchronization, and unavailable states. This verifies integration, not detector accuracy on arbitrary real photos. Full exterior inference also needs the separately documented optional model dependencies and trained checkpoint; see `exterior_vision/README.md` and `MODEL_CARD.md`.
