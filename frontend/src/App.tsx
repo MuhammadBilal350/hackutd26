@@ -17,7 +17,7 @@ export default function App() {
   function go(next:Screen) {setPrevious(screen);setScreen(next);}
   const notify=(title:string,message:string)=>setModal({title,message});
   const props={go,notify,inspection,onInspection:setInspection};
-  const content={Home:<Home {...props}/>,Inspect:<Inspect {...props}/>,Forecast:<Forecast/>,Shop:<Shop {...props}/>,Service:<Service {...props}/>,Report:<Report {...props}/>,Dealers:<Dealers {...props}/>,Voice:<Voice/>}[screen];
+  const content={Home:<Home {...props}/>,Inspect:<Inspect {...props}/>,Forecast:<Forecast/>,Shop:<Shop {...props}/>,Service:<Service {...props}/>,Report:<Report {...props}/>,Dealers:<Dealers {...props}/>,Voice:<Voice {...props}/>}[screen];
   const active=screen==='Report'?'Inspect':screen==='Dealers'?'Shop':screen;
   return <div className="iphone-stage" style={{width:IPHONE.width*scale,height:IPHONE.height*scale}}><div className="iphone-frame" style={{transform:`scale(${scale})`}}><View nativeID="app" dataSet={{theme,screen}} {...{className:theme}}>
     {['Report','Dealers','Voice'].includes(screen)&&<Tap ui="back" label="Go back" onPress={()=>setScreen(previous==='Voice'?'Home':previous)}><ChevronLeft size={21} color="var(--text)"/></Tap>}
