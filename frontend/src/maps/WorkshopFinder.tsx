@@ -2,22 +2,36 @@ import { lazy,Suspense,useCallback,useEffect,useRef,useState } from 'react';
 import { MapPin,Navigation,Phone } from 'lucide-react';
 import type { FinderResult } from '../../../shared/roadside';
 import { Box,Txt,Card,Row,Button,Tap } from '../ui';
-import { browserLocation,directions,searchWorkshops } from './client';
+import { browserLocation,directions,searchWorkshops,saveWorkshops,type WorkshopSaveResult } from './client';
+import {subscribeServiceCenters,type SpacetimeStatus} from '../db/spacetime';
 const WorkshopMap=lazy(()=>import('./WorkshopMap'));
 export default function WorkshopFinder() {
   const [result,setResult]=useState<FinderResult|null>(null),[selected,setSelected]=useState<string|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState('');
+  const [databaseStatus,setDatabaseStatus]=useState<SpacetimeStatus>('unconfigured'),[savedCount,setSavedCount]=useState(0);
+  const [save,setSave]=useState<WorkshopSaveResult|'saving'|null>(null);
+  const searchId=useRef(0);
+  useEffect(()=>subscribeServiceCenters({status:setDatabaseStatus,centers:rows=>setSavedCount(rows.length)}),[]);
   const mounted=useRef(true);useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
   const choose=useCallback((id:string)=>setSelected(id),[]);
   async function search() {
-    setBusy(true);setError('');
+    const requestId=++searchId.current;
+    setBusy(true);setError('');setSave(null);
     try {
       if(!import.meta.env.VITE_GEOAPIFY_API_KEY)throw new Error('Workshop search is not configured yet.');
       const found=await searchWorkshops(await browserLocation());
-      if(mounted.current){setResult(found);setSelected(found.nearest?.id??null);}
+      if(mounted.current){
+        setResult(found);setSelected(found.nearest?.id??null);
+        if(found.centers.length){
+          setSave('saving');
+          void saveWorkshops(found.centers).then(outcome=>{if(mounted.current&&requestId===searchId.current)setSave(outcome);});
+        }
+      }
     }catch(e){if(mounted.current)setError(e instanceof Error?e.message:'Workshop search failed. Please try again.');}
     finally{if(mounted.current)setBusy(false);}
   }
-  return <Box style={{gap:16}}><Card style={{padding:16,gap:12}}><Row><MapPin size={22} color="var(--red)"/><Box style={{flex:1}}><Txt style={{fontWeight:700}}>Find a nearby workshop</Txt><Txt ui="muted">Toyota listings first, then nearby repair shops.</Txt></Box></Row><Button onPress={()=>void search()} disabled={busy} label="Find nearby workshops">{busy?'Finding workshops…':result?'Refresh nearby workshops':'Find nearby workshops'}</Button><Txt ui="muted" style={{fontSize:12}}>Your location is shared with the map provider only when you search.</Txt></Card>
+  return <Box style={{gap:16}}><Card style={{padding:16,gap:12}}><Row><MapPin size={22} color="var(--red)"/><Box style={{flex:1}}><Txt style={{fontWeight:700}}>Find a nearby workshop</Txt><Txt ui="muted">Toyota listings first, then nearby repair shops.</Txt></Box></Row><Button onPress={()=>void search()} disabled={busy} label="Find nearby workshops">{busy?'Finding workshops…':result?'Refresh nearby workshops':'Find nearby workshops'}</Button><Txt ui="muted" style={{fontSize:12}}>Search shares your location with the map provider. Returned business listings are saved to the shared workshop database.</Txt></Card>
+    <Txt ui="muted" style={{fontSize:12}}>Live workshop database: {databaseStatus}{databaseStatus==='connected'?` | ${savedCount} shared listings`:''}. Nearby results come from your search.</Txt>
+    {save?<div role="status"><Txt ui="muted" style={{fontSize:13}}>{save==='saving'?'Saving workshop listings...':save.state==='saved'?`Saved ${save.saved} workshop listings to the database.`:save.state==='partial'?`Partially saved: ${save.saved} of ${save.total} workshops. Map results and directions are still available.`:save.state==='error'?'Could not save workshops to the database. Map results and directions are still available.':''}</Txt></div>:null}
     {error?<Card style={{padding:16}}><Txt style={{color:'var(--red)'}}>{error}</Txt><Txt ui="muted" style={{marginTop:8}}>You can try again using the search button.</Txt></Card>:null}
     {result?<><Suspense fallback={<Card style={{padding:20}}><Txt ui="muted">Loading map…</Txt></Card>}><WorkshopMap location={result.userLocation} centers={result.centers} selected={selected} onSelect={choose}/></Suspense>
       {result.usedFallback&&result.centers.length>0?<Txt ui="muted" style={{fontSize:13}}>No Toyota listing nearby. Showing local repair shops.</Txt>:null}
