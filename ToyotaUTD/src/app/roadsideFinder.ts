@@ -346,4 +346,19 @@ export async function findNearestToyotaCenter(
     centers,
     usedFallback,
   };
+  /*
+  How to test:
+  1. Ensure the EXPO_PUBLIC_GEOAPIFY_API_KEY is set in the .env file.
+  2. Call findNearestToyotaCenter() with or without a provided location.
+  3. Check the returned result for the nearest Toyota center and driving distances.
+
+  Run in terminal:
+  cd ~/hackutd26/ToyotaUTD
+
+set -a
+source .env
+set +a
+
+npx tsx -e "import('./src/app/roadsideFinder.ts').then(async m => { const r = await m.findNearestToyotaCenter({lat:32.9483,lon:-96.7299}); console.log('CENTERS FOUND:',r.centers.length); console.log('NEAREST:',r.nearest); console.log('RESULTS:',r.centers); console.log('FALLBACK:',r.usedFallback); }).catch(console.error)"
+  */
 }
