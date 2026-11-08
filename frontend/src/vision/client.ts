@@ -4,7 +4,7 @@ export interface DashboardReport {
   limitations:string;
 }
 export interface ExteriorReport {
-  condition:{visible_condition_score:number|null;coverage:{captured:string[];missing:string[];complete:boolean};findings:{label:string;confidence:number}[];rating_enabled:boolean;rating_note:string;limitations:string};
+  condition:{visible_condition_score:number|null;coverage:{captured:string[];missing:string[];complete:boolean};findings:{label:string;confidence:number;visual_extent?:string;area_fraction?:number;view?:string}[];rating_enabled:boolean;rating_note:string;limitations:string};
   model:{checkpoint_present:boolean;rating_enabled:boolean};
 }
 export interface InspectionResult {dashboard?:DashboardReport;exterior?:ExteriorReport;errors:{dashboard?:string;exterior?:string};capturedAt:string;year:number;miles:number;notes?:string}
