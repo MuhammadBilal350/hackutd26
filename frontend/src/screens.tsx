@@ -1,3 +1,4 @@
+import WorkshopFinder from './maps/WorkshopFinder';
 import { useEffect, useRef, useState } from 'react';
 import { TextInput, Switch } from 'react-native-web';
 import { CarFront, Camera, Gauge, Droplet, TriangleAlert, Tag, ChevronRight, Phone, CalendarDays, Minus, Plus, Mic } from 'lucide-react';
@@ -52,10 +53,7 @@ export function Service({notify}:ScreenProps) {
   {tab==='Maintenance'?<Box key="maintenance" ui="screen" style={{gap:24}}><Box><Label>MILES UNTIL DUE · 84,210 NOW</Label><Card style={{padding:'0 16px'}}>{maintenance.map(([name,miles,percent],i)=><Box key={name} style={{padding:'15px 0',borderBottom:i<3?'1px solid var(--line)':undefined}}><Row style={{justifyContent:'space-between'}}><Txt>{name}</Txt><Txt style={{fontWeight:600,color:i===0?red:'var(--text)'}}>{miles}</Txt></Row><Progress percent={percent} color={i===0?red:'var(--text)'}/></Box>)}</Card></Box>
     <Card style={{padding:'12px 16px'}}><Row style={{justifyContent:'space-between'}}><Box><Txt>Reminders</Txt><Txt ui="muted">Notify at 500 mi left</Txt></Box><Switch accessibilityLabel="Maintenance reminders" value={remind} onValueChange={setRemind} activeTrackColor="#30c759" trackColor={{false:'#bcbcc2',true:'#30c759'}} thumbColor="white"/></Row></Card>
     <Box><Label>BOOK AN APPOINTMENT</Label><Row style={{gap:8,marginBottom:14}}>{['Mon','Tue','Wed','Thu','Fri'].map((name,i)=><Tap key={name} label={`${name} ${i+9}`} selected={day===name} onPress={()=>setDay(name)} style={{flex:1,borderRadius:20,background:day===name?red:'var(--card)',padding:'11px 0',alignItems:'center',gap:5}}><Txt style={{fontSize:12,color:day===name?'white':'var(--muted)'}}>{name}</Txt><Txt style={{fontSize:16,fontWeight:600,color:day===name?'white':'var(--text)'}}>{i+9}</Txt></Tap>)}</Row><Button label="Book for 9:00 AM" onPress={()=>notify('Appointment selected',`${day}, Nov ${9+['Mon','Tue','Wed','Thu','Fri'].indexOf(day)} at 9:00 AM. This is a demo booking; no appointment has been sent.`)}><CalendarDays size={18} style={{verticalAlign:'middle',marginRight:8}}/>Book for 9:00 AM</Button></Box>
-  </Box>:<Box key="workshop" ui="screen"><Card style={{padding:16}}><Row><IconBox color="amber"><Gauge size={25}/></IconBox><Box style={{flex:1}}><Txt style={{fontWeight:600}}>Loose fuel cap or O₂ sensor</Txt><Txt ui="muted">Check engine light · safe to drive</Txt></Box></Row></Card>
-    <div className="map" aria-label="Illustrative map showing nearby workshop demo locations"><div className="park"/>{['one','two','three','four'].map(s=><div className={`street ${s}`} key={s}/>)}<div className="pin" style={{left:'22%',top:30}}><span>1</span></div><div className="pin" style={{left:'80%',top:112}}><span>2</span></div><div className="pin" style={{left:'67%',top:22,background:'#ffa600'}}><span>T</span></div><div className="location"/><button className="open-map" onClick={()=>window.open('https://www.google.com/maps/search/Toyota+service+near+me','_blank','noopener,noreferrer')}>Open in Maps</button></div>
-    <Card>{[['1','Lakeview Toyota Service','2.4 mi · open until 6 PM'],['2','Cedar Hill Toyota Service','5.1 mi · open until 7 PM'],['T','Metro 24/7 Towing','3.0 mi · about 25 min away']].map(([n,title,sub])=><Box ui="list-row" key={title} style={{padding:'12px 16px',gap:12}}><Box style={{width:29,height:29,borderRadius:20,background:n==='T'?'#ffa600':red,alignItems:'center',justifyContent:'center'}}><Txt style={{fontSize:13,color:n==='T'?'black':'white',fontWeight:600}}>{n}</Txt></Box><Box style={{flex:1}}><Txt>{title}</Txt><Txt ui="muted">{sub}</Txt></Box><Tap label={`Contact ${title}`} onPress={()=>notify(title,'This is a demo provider. Contact details will be connected with the workshop integration.')} style={{width:43,height:43,borderRadius:25,alignItems:'center',justifyContent:'center',background:'var(--greenbg)',color:'var(--green)'}}><Phone size={19}/></Tap></Box>)}</Card><p className="demo-note">Illustrative locations and vehicle advice.</p>
-  </Box>}</>;
+  </Box>:<WorkshopFinder/>}</>;
 }
 export function Shop({go}:ScreenProps) {
   const [category,setCategory]=useState('SUV');const [term,setTerm]=useState('60 mo');const [credit,setCredit]=useState('Good');
@@ -81,6 +79,3 @@ export function Voice() {
     <Box style={{gap:9,alignItems:'center',marginTop:12}}>{['When is my next oil change?','Explain my score'].map(q=><button className="prompt" onClick={()=>ask(q)} key={q}>{q}</button>)}</Box><p className="demo-note">Voice preview · no microphone recording or live AI.</p>
   </>;
 }
-
-
-
