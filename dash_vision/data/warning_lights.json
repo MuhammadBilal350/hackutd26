@@ -26,8 +26,18 @@
       "flashing_severity": "critical",
       "flashing_multiplier": 1.8,
       "drive_safe": "limited",
-      "affected_systems": ["engine management", "emissions", "fuel system", "ignition"],
-      "performance_impact": { "power": 2, "fuel_efficiency": 2, "safety": 1, "drivability": 2 },
+      "affected_systems": [
+        "engine management",
+        "emissions",
+        "fuel system",
+        "ignition"
+      ],
+      "performance_impact": {
+        "power": 2,
+        "fuel_efficiency": 2,
+        "safety": 1,
+        "drivability": 2
+      },
       "performance_effects": [
         "ECU may run in limp/fail-safe mode with reduced power",
         "Rough idle or hesitation on misfire codes",
@@ -42,7 +52,10 @@
         "2AZ-FE oil burning fouling plugs (2002-2011 4-cylinder)"
       ],
       "reliability_penalty": 18,
-      "repair_cost_usd": [20, 2500],
+      "repair_cost_usd": [
+        20,
+        2500
+      ],
       "action": "Read the OBD-II code before buying. Flashing: avoid driving; get it towed or repaired immediately."
     },
     {
@@ -54,8 +67,15 @@
       "is_fault": true,
       "severity": "critical",
       "drive_safe": "no",
-      "affected_systems": ["engine lubrication"],
-      "performance_impact": { "power": 3, "fuel_efficiency": 1, "safety": 3, "drivability": 4 },
+      "affected_systems": [
+        "engine lubrication"
+      ],
+      "performance_impact": {
+        "power": 3,
+        "fuel_efficiency": 1,
+        "safety": 3,
+        "drivability": 4
+      },
       "performance_effects": [
         "Bearings and cam surfaces lose lubrication within seconds to minutes",
         "Knocking/ticking, then engine seizure",
@@ -67,7 +87,10 @@
         "Faulty oil pressure switch (cheap false alarm)"
       ],
       "reliability_penalty": 35,
-      "repair_cost_usd": [30, 6000],
+      "repair_cost_usd": [
+        30,
+        6000
+      ],
       "action": "Stop the engine. Check oil level. Do not drive until pressure is confirmed with a gauge."
     },
     {
@@ -79,16 +102,33 @@
       "is_fault": true,
       "severity": "high",
       "drive_safe": "limited",
-      "affected_systems": ["alternator", "12V battery", "electrical"],
-      "performance_impact": { "power": 1, "fuel_efficiency": 0, "safety": 2, "drivability": 3 },
+      "affected_systems": [
+        "alternator",
+        "12V battery",
+        "electrical"
+      ],
+      "performance_impact": {
+        "power": 1,
+        "fuel_efficiency": 0,
+        "safety": 2,
+        "drivability": 3
+      },
       "performance_effects": [
         "Car runs on battery only; stalls once the battery drains (often 30-60 min)",
         "Electric power steering, lights and ABS weaken as voltage drops",
         "On hybrids: DC-DC converter or 12V auxiliary battery fault"
       ],
-      "common_camry_causes": ["Failing alternator", "Worn serpentine belt", "Corroded battery terminals", "Aged 12V battery"],
+      "common_camry_causes": [
+        "Failing alternator",
+        "Worn serpentine belt",
+        "Corroded battery terminals",
+        "Aged 12V battery"
+      ],
       "reliability_penalty": 15,
-      "repair_cost_usd": [150, 900],
+      "repair_cost_usd": [
+        150,
+        900
+      ],
       "action": "Turn off accessories and drive straight to a shop. Test battery and alternator output."
     },
     {
@@ -100,16 +140,32 @@
       "is_fault": true,
       "severity": "critical",
       "drive_safe": "no",
-      "affected_systems": ["cooling system", "engine"],
-      "performance_impact": { "power": 3, "fuel_efficiency": 1, "safety": 2, "drivability": 4 },
+      "affected_systems": [
+        "cooling system",
+        "engine"
+      ],
+      "performance_impact": {
+        "power": 3,
+        "fuel_efficiency": 1,
+        "safety": 2,
+        "drivability": 4
+      },
       "performance_effects": [
         "Engine overheating; ECU may cut power",
         "Risk of warped cylinder head / blown head gasket",
         "A/C may be disabled to reduce load"
       ],
-      "common_camry_causes": ["Low coolant / leak", "Water pump failure (2AZ-FE, 2GR-FE)", "Thermostat stuck closed", "Radiator fan failure"],
+      "common_camry_causes": [
+        "Low coolant / leak",
+        "Water pump failure (2AZ-FE, 2GR-FE)",
+        "Thermostat stuck closed",
+        "Radiator fan failure"
+      ],
       "reliability_penalty": 30,
-      "repair_cost_usd": [100, 3500],
+      "repair_cost_usd": [
+        100,
+        3500
+      ],
       "action": "Pull over and shut the engine off. Do not open a hot radiator cap."
     },
     {
@@ -121,12 +177,27 @@
       "is_fault": false,
       "severity": "info",
       "drive_safe": "yes",
-      "affected_systems": ["cooling system"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 1, "safety": 0, "drivability": 0 },
-      "performance_effects": ["Normal during warm-up. If it stays on after 15+ min of driving, thermostat may be stuck open (poor heat, lower MPG)."],
-      "common_camry_causes": ["Cold start (normal)", "Thermostat stuck open"],
+      "affected_systems": [
+        "cooling system"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 1,
+        "safety": 0,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "Normal during warm-up. If it stays on after 15+ min of driving, thermostat may be stuck open (poor heat, lower MPG)."
+      ],
+      "common_camry_causes": [
+        "Cold start (normal)",
+        "Thermostat stuck open"
+      ],
       "reliability_penalty": 0,
-      "repair_cost_usd": [0, 250],
+      "repair_cost_usd": [
+        0,
+        250
+      ],
       "action": "None unless it stays on after the engine should be warm."
     },
     {
@@ -138,15 +209,32 @@
       "is_fault": true,
       "severity": "high",
       "drive_safe": "limited",
-      "affected_systems": ["hydraulic brakes", "brake fluid", "parking brake"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 4, "drivability": 2 },
+      "affected_systems": [
+        "hydraulic brakes",
+        "brake fluid",
+        "parking brake"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 4,
+        "drivability": 2
+      },
       "performance_effects": [
         "Low brake fluid or hydraulic fault: longer stopping distances",
         "Can also mean the parking brake is still engaged (not a fault)"
       ],
-      "common_camry_causes": ["Parking brake engaged", "Low brake fluid from worn pads", "Fluid leak", "Brake booster / actuator fault (hybrid)"],
+      "common_camry_causes": [
+        "Parking brake engaged",
+        "Low brake fluid from worn pads",
+        "Fluid leak",
+        "Brake booster / actuator fault (hybrid)"
+      ],
       "reliability_penalty": 20,
-      "repair_cost_usd": [20, 1800],
+      "repair_cost_usd": [
+        20,
+        1800
+      ],
       "action": "Confirm parking brake is fully released. If still on, check fluid; do not drive with a soft pedal."
     },
     {
@@ -158,15 +246,31 @@
       "is_fault": true,
       "severity": "medium",
       "drive_safe": "yes",
-      "affected_systems": ["ABS", "VSC", "traction control"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 3, "drivability": 1 },
+      "affected_systems": [
+        "ABS",
+        "VSC",
+        "traction control"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 3,
+        "drivability": 1
+      },
       "performance_effects": [
         "Normal brakes work, but wheels can lock in hard stops",
         "VSC and traction control are usually disabled with it"
       ],
-      "common_camry_causes": ["Wheel speed sensor", "Damaged tone ring", "ABS actuator/pump (expensive)"],
+      "common_camry_causes": [
+        "Wheel speed sensor",
+        "Damaged tone ring",
+        "ABS actuator/pump (expensive)"
+      ],
       "reliability_penalty": 12,
-      "repair_cost_usd": [100, 1800],
+      "repair_cost_usd": [
+        100,
+        1800
+      ],
       "action": "Safe to drive gently; scan ABS codes. Increase following distance."
     },
     {
@@ -178,12 +282,30 @@
       "is_fault": true,
       "severity": "high",
       "drive_safe": "yes",
-      "affected_systems": ["airbags", "seatbelt pretensioners"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 4, "drivability": 0 },
-      "performance_effects": ["Airbags and pretensioners may not deploy in a crash", "No effect on driving feel"],
-      "common_camry_causes": ["Seat/occupant sensor connector under seat", "Clock spring", "Prior collision not properly repaired"],
+      "affected_systems": [
+        "airbags",
+        "seatbelt pretensioners"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 4,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "Airbags and pretensioners may not deploy in a crash",
+        "No effect on driving feel"
+      ],
+      "common_camry_causes": [
+        "Seat/occupant sensor connector under seat",
+        "Clock spring",
+        "Prior collision not properly repaired"
+      ],
       "reliability_penalty": 15,
-      "repair_cost_usd": [100, 1500],
+      "repair_cost_usd": [
+        100,
+        1500
+      ],
       "action": "Car drives normally but crash protection is compromised. Check accident history."
     },
     {
@@ -197,12 +319,30 @@
       "flashing_severity": "low",
       "flashing_multiplier": 1.0,
       "drive_safe": "yes",
-      "affected_systems": ["tires", "TPMS sensors"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 1, "safety": 2, "drivability": 1 },
-      "performance_effects": ["Under-inflation increases braking distance and tire wear", "~0.5-3% MPG loss"],
-      "common_camry_causes": ["Cold weather pressure drop", "Puncture", "Dead TPMS sensor battery (8-12 yr old cars)"],
+      "affected_systems": [
+        "tires",
+        "TPMS sensors"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 1,
+        "safety": 2,
+        "drivability": 1
+      },
+      "performance_effects": [
+        "Under-inflation increases braking distance and tire wear",
+        "~0.5-3% MPG loss"
+      ],
+      "common_camry_causes": [
+        "Cold weather pressure drop",
+        "Puncture",
+        "Dead TPMS sensor battery (8-12 yr old cars)"
+      ],
       "reliability_penalty": 4,
-      "repair_cost_usd": [0, 400],
+      "repair_cost_usd": [
+        0,
+        400
+      ],
       "action": "Check and inflate tires to the door-jamb spec."
     },
     {
@@ -214,12 +354,30 @@
       "is_fault": true,
       "severity": "medium",
       "drive_safe": "yes",
-      "affected_systems": ["vehicle stability control", "traction control"],
-      "performance_impact": { "power": 1, "fuel_efficiency": 0, "safety": 2, "drivability": 1 },
-      "performance_effects": ["No stability or traction intervention on slippery roads", "Often appears together with check_engine because Toyota disables VSC on engine faults"],
-      "common_camry_causes": ["Triggered by an engine fault (scan the engine first)", "Steering angle sensor", "Wheel speed sensor"],
+      "affected_systems": [
+        "vehicle stability control",
+        "traction control"
+      ],
+      "performance_impact": {
+        "power": 1,
+        "fuel_efficiency": 0,
+        "safety": 2,
+        "drivability": 1
+      },
+      "performance_effects": [
+        "No stability or traction intervention on slippery roads",
+        "Often appears together with check_engine because Toyota disables VSC on engine faults"
+      ],
+      "common_camry_causes": [
+        "Triggered by an engine fault (scan the engine first)",
+        "Steering angle sensor",
+        "Wheel speed sensor"
+      ],
       "reliability_penalty": 8,
-      "repair_cost_usd": [0, 1200],
+      "repair_cost_usd": [
+        0,
+        1200
+      ],
       "action": "Scan codes; if check_engine is also on, fix that first."
     },
     {
@@ -231,12 +389,26 @@
       "is_fault": false,
       "severity": "info",
       "drive_safe": "yes",
-      "affected_systems": ["vehicle stability control"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 1, "drivability": 0 },
-      "performance_effects": ["Driver switched stability control off. Not a fault, but turn it back on."],
-      "common_camry_causes": ["Button pressed"],
+      "affected_systems": [
+        "vehicle stability control"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 1,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "Driver switched stability control off. Not a fault, but turn it back on."
+      ],
+      "common_camry_causes": [
+        "Button pressed"
+      ],
       "reliability_penalty": 0,
-      "repair_cost_usd": [0, 0],
+      "repair_cost_usd": [
+        0,
+        0
+      ],
       "action": "Press the VSC OFF button to re-enable."
     },
     {
@@ -248,12 +420,28 @@
       "is_fault": true,
       "severity": "high",
       "drive_safe": "limited",
-      "affected_systems": ["power steering"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 3, "drivability": 3 },
-      "performance_effects": ["Steering assist reduced or lost: heavy steering at low speed"],
-      "common_camry_causes": ["Low system voltage", "EPS motor / torque sensor", "Steering column fault (2012-2017)"],
+      "affected_systems": [
+        "power steering"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 3,
+        "drivability": 3
+      },
+      "performance_effects": [
+        "Steering assist reduced or lost: heavy steering at low speed"
+      ],
+      "common_camry_causes": [
+        "Low system voltage",
+        "EPS motor / torque sensor",
+        "Steering column fault (2012-2017)"
+      ],
       "reliability_penalty": 18,
-      "repair_cost_usd": [100, 2000],
+      "repair_cost_usd": [
+        100,
+        2000
+      ],
       "action": "Drive carefully to a shop; check battery voltage first."
     },
     {
@@ -265,12 +453,26 @@
       "is_fault": false,
       "severity": "info",
       "drive_safe": "yes",
-      "affected_systems": ["fuel"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 0, "drivability": 0 },
-      "performance_effects": ["Refuel soon. Repeatedly running near-empty can shorten fuel pump life."],
-      "common_camry_causes": ["Low fuel"],
+      "affected_systems": [
+        "fuel"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 0,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "Refuel soon. Repeatedly running near-empty can shorten fuel pump life."
+      ],
+      "common_camry_causes": [
+        "Low fuel"
+      ],
       "reliability_penalty": 0,
-      "repair_cost_usd": [0, 0],
+      "repair_cost_usd": [
+        0,
+        0
+      ],
       "action": "Refuel."
     },
     {
@@ -282,12 +484,27 @@
       "is_fault": false,
       "severity": "info",
       "drive_safe": "yes",
-      "affected_systems": ["occupant restraint reminder"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 1, "drivability": 0 },
-      "performance_effects": ["Unbuckled occupant. Not a vehicle fault."],
-      "common_camry_causes": ["Seatbelt unbuckled", "Object on passenger seat"],
+      "affected_systems": [
+        "occupant restraint reminder"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 1,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "Unbuckled occupant. Not a vehicle fault."
+      ],
+      "common_camry_causes": [
+        "Seatbelt unbuckled",
+        "Object on passenger seat"
+      ],
       "reliability_penalty": 0,
-      "repair_cost_usd": [0, 0],
+      "repair_cost_usd": [
+        0,
+        0
+      ],
       "action": "Buckle up."
     },
     {
@@ -299,12 +516,27 @@
       "is_fault": false,
       "severity": "info",
       "drive_safe": "yes",
-      "affected_systems": ["body"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 1, "drivability": 0 },
-      "performance_effects": ["A door/trunk is open. A light that stays on with doors closed suggests a bad latch switch."],
-      "common_camry_causes": ["Door open", "Door latch switch"],
+      "affected_systems": [
+        "body"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 1,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "A door/trunk is open. A light that stays on with doors closed suggests a bad latch switch."
+      ],
+      "common_camry_causes": [
+        "Door open",
+        "Door latch switch"
+      ],
       "reliability_penalty": 0,
-      "repair_cost_usd": [0, 300],
+      "repair_cost_usd": [
+        0,
+        300
+      ],
       "action": "Close doors; check latch switch if it persists."
     },
     {
@@ -316,12 +548,26 @@
       "is_fault": true,
       "severity": "medium",
       "drive_safe": "limited",
-      "affected_systems": ["depends on MID message"],
-      "performance_impact": { "power": 1, "fuel_efficiency": 0, "safety": 2, "drivability": 1 },
-      "performance_effects": ["Generic warning; read the accompanying MID message for the real issue"],
-      "common_camry_causes": ["See MID message (hybrid system, low oil, AT oil temp, PCS unavailable, etc.)"],
+      "affected_systems": [
+        "depends on MID message"
+      ],
+      "performance_impact": {
+        "power": 1,
+        "fuel_efficiency": 0,
+        "safety": 2,
+        "drivability": 1
+      },
+      "performance_effects": [
+        "Generic warning; read the accompanying MID message for the real issue"
+      ],
+      "common_camry_causes": [
+        "See MID message (hybrid system, low oil, AT oil temp, PCS unavailable, etc.)"
+      ],
       "reliability_penalty": 6,
-      "repair_cost_usd": [0, 1000],
+      "repair_cost_usd": [
+        0,
+        1000
+      ],
       "action": "Read the MID message; score that message as well."
     },
     {
@@ -333,12 +579,27 @@
       "is_fault": false,
       "severity": "low",
       "drive_safe": "yes",
-      "affected_systems": ["engine oil"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 0, "drivability": 0 },
-      "performance_effects": ["Oil change interval reached (5,000 mi older / 10,000 mi synthetic on 2018+). Overdue oil accelerates wear."],
-      "common_camry_causes": ["Scheduled oil change due", "Reminder never reset after service"],
+      "affected_systems": [
+        "engine oil"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 0,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "Oil change interval reached (5,000 mi older / 10,000 mi synthetic on 2018+). Overdue oil accelerates wear."
+      ],
+      "common_camry_causes": [
+        "Scheduled oil change due",
+        "Reminder never reset after service"
+      ],
       "reliability_penalty": 3,
-      "repair_cost_usd": [50, 120],
+      "repair_cost_usd": [
+        50,
+        120
+      ],
       "action": "Ask for service records; overdue oil changes are a red flag on 2AZ-FE engines."
     },
     {
@@ -350,12 +611,31 @@
       "is_fault": true,
       "severity": "critical",
       "drive_safe": "limited",
-      "affected_systems": ["hybrid battery", "inverter", "electric motor-generators"],
-      "performance_impact": { "power": 3, "fuel_efficiency": 3, "safety": 2, "drivability": 3 },
-      "performance_effects": ["Car may enter limp mode or refuse to go into READY", "Large MPG loss if the HV battery is degrading"],
-      "common_camry_causes": ["Aging HV battery (2007-2011 Camry Hybrid)", "Inverter coolant pump", "HV battery cooling fan clogged"],
+      "affected_systems": [
+        "hybrid battery",
+        "inverter",
+        "electric motor-generators"
+      ],
+      "performance_impact": {
+        "power": 3,
+        "fuel_efficiency": 3,
+        "safety": 2,
+        "drivability": 3
+      },
+      "performance_effects": [
+        "Car may enter limp mode or refuse to go into READY",
+        "Large MPG loss if the HV battery is degrading"
+      ],
+      "common_camry_causes": [
+        "Aging HV battery (2007-2011 Camry Hybrid)",
+        "Inverter coolant pump",
+        "HV battery cooling fan clogged"
+      ],
       "reliability_penalty": 30,
-      "repair_cost_usd": [300, 5000],
+      "repair_cost_usd": [
+        300,
+        5000
+      ],
       "action": "Get a hybrid health check (battery block voltages) before buying."
     },
     {
@@ -367,12 +647,29 @@
       "is_fault": true,
       "severity": "high",
       "drive_safe": "limited",
-      "affected_systems": ["automatic transmission"],
-      "performance_impact": { "power": 2, "fuel_efficiency": 1, "safety": 1, "drivability": 3 },
-      "performance_effects": ["Transmission may hold gears or slip", "Overheated fluid shortens transmission life"],
-      "common_camry_causes": ["Old/low ATF", "Heavy towing or hill climbing", "Cooler line blockage"],
+      "affected_systems": [
+        "automatic transmission"
+      ],
+      "performance_impact": {
+        "power": 2,
+        "fuel_efficiency": 1,
+        "safety": 1,
+        "drivability": 3
+      },
+      "performance_effects": [
+        "Transmission may hold gears or slip",
+        "Overheated fluid shortens transmission life"
+      ],
+      "common_camry_causes": [
+        "Old/low ATF",
+        "Heavy towing or hill climbing",
+        "Cooler line blockage"
+      ],
       "reliability_penalty": 18,
-      "repair_cost_usd": [150, 4500],
+      "repair_cost_usd": [
+        150,
+        4500
+      ],
       "action": "Stop and let it cool. Check ATF condition and service history."
     },
     {
@@ -384,12 +681,29 @@
       "is_fault": true,
       "severity": "low",
       "drive_safe": "yes",
-      "affected_systems": ["front radar", "camera", "automatic emergency braking"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 2, "drivability": 0 },
-      "performance_effects": ["Automatic emergency braking and collision alerts unavailable"],
-      "common_camry_causes": ["Dirty windshield or radar emblem", "Misaligned radar after front-end repair"],
+      "affected_systems": [
+        "front radar",
+        "camera",
+        "automatic emergency braking"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 2,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "Automatic emergency braking and collision alerts unavailable"
+      ],
+      "common_camry_causes": [
+        "Dirty windshield or radar emblem",
+        "Misaligned radar after front-end repair"
+      ],
       "reliability_penalty": 5,
-      "repair_cost_usd": [0, 1200],
+      "repair_cost_usd": [
+        0,
+        1200
+      ],
       "action": "Clean sensors; if it persists, check for front-end collision repair."
     },
     {
@@ -401,13 +715,58 @@
       "is_fault": false,
       "severity": "info",
       "drive_safe": "yes",
-      "affected_systems": ["washer"],
-      "performance_impact": { "power": 0, "fuel_efficiency": 0, "safety": 0, "drivability": 0 },
-      "performance_effects": ["Refill washer fluid."],
-      "common_camry_causes": ["Low fluid"],
+      "affected_systems": [
+        "washer"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 0,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "Refill washer fluid."
+      ],
+      "common_camry_causes": [
+        "Low fluid"
+      ],
       "reliability_penalty": 0,
-      "repair_cost_usd": [0, 10],
+      "repair_cost_usd": [
+        0,
+        10
+      ],
       "action": "Refill."
+    },
+    {
+      "id": "parking_brake",
+      "name": "Parking Brake Applied",
+      "color": "red",
+      "visual": "P inside a circle with outer brackets.",
+      "category": "status",
+      "is_fault": false,
+      "severity": "info",
+      "drive_safe": "yes",
+      "affected_systems": [
+        "parking brake"
+      ],
+      "performance_impact": {
+        "power": 0,
+        "fuel_efficiency": 0,
+        "safety": 0,
+        "drivability": 0
+      },
+      "performance_effects": [
+        "Indicates the parking brake may be applied; not proof of a brake-system fault."
+      ],
+      "common_camry_causes": [
+        "Parking brake applied"
+      ],
+      "reliability_penalty": 0,
+      "repair_cost_usd": [
+        0,
+        0
+      ],
+      "action": "Release the parking brake before driving. If the indicator persists, follow the vehicle manual and arrange a check."
     }
   ]
 }
