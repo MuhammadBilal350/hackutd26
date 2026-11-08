@@ -290,7 +290,6 @@ export default function HomeScreen() {
       await sendSpacetimeMessage(`${prefix} ${content}`);
     } catch (error) {
       console.warn("Could not save chat message:", error);
-      setDbStatus("save failed");
     }
   }
 

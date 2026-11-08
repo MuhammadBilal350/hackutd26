@@ -8,7 +8,10 @@ export function useColorScheme() {
   const [hasHydrated, setHasHydrated] = useState(false);
 
   useEffect(() => {
-    setHasHydrated(true);
+    // Defer the update so the server-rendered light theme matches the first
+    // client render during hydration.
+    const timeout = setTimeout(() => setHasHydrated(true), 0);
+    return () => clearTimeout(timeout);
   }, []);
 
   const colorScheme = useRNColorScheme();
