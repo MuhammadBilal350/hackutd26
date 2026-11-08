@@ -78,4 +78,12 @@ html[data-theme=dark] body{background:radial-gradient(ellipse at 40% 10%,#272b35
 
 
 #app[data-theme=dark][data-screen=Inspect] [data-ui=list-row] label{color:#ff6b85!important}
+.workshop-map{height:220px;width:100%;position:relative;border-radius:24px;overflow:hidden;z-index:0;border:1px solid var(--glass-edge)}
+.workshop-marker{background:none;border:0}
+.workshop-marker span{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:2px solid white;border-radius:50% 50% 50% 8px;background:#f40024;color:white;font-size:13px;font-weight:700;box-shadow:0 3px 8px #0003}
+.workshop-marker span.chosen{background:#171b25;outline:3px solid #f4002440}
+.workshop-actions{display:flex;gap:10px;align-items:center;font-size:13px}
+.workshop-actions a{display:inline-flex;gap:6px;align-items:center;padding:8px 12px;border-radius:20px;background:var(--glass-tint);color:var(--text);text-decoration:none;border:1px solid var(--glass-edge)}
+.workshop-actions span{color:var(--muted)}
+.workshop-map .leaflet-control-attribution{font-size:9px}
 
