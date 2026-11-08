@@ -27,8 +27,10 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
 if __package__:
     from .generate_dataset import COLORS, LIGHTS, MESSAGE_LIGHTS, draw_icon
+    from .priority_lights import detect_priority
 else:
     from generate_dataset import COLORS, LIGHTS, MESSAGE_LIGHTS, draw_icon
+    from priority_lights import detect_priority
 
 HERE = Path(__file__).resolve().parent
 REF_DIR = HERE / "icon_refs"
@@ -41,7 +43,7 @@ K = 5
 
 # Same glyph, different meaning by color.
 GLYPH_OF = {"coolant_temp": "coolant", "coolant_temp_cold": "coolant"}
-ICON_IDS = [l for l in LIGHTS if l not in MESSAGE_LIGHTS]
+ICON_IDS = [l for l in LIGHTS if l not in MESSAGE_LIGHTS and l != 'parking_brake']
 
 
 # ---------------------------------------------------------------- pipeline
@@ -211,7 +213,18 @@ def detect_array(bgr: np.ndarray) -> tuple[dict, np.ndarray]:
     shown = bgr.copy()
     found: dict[str, dict] = {}
     rejected = []
+    priority=detect_priority(bgr)
+    for match in priority:
+        lid=match['id'];x,y,w,h=match['bbox']
+        found[lid]={'id':lid,'color':match['color'],'confidence':match['confidence'],
+                    'evidence':f"Illuminated reference-shape match {match['quality']:.2f}",'_d':0}
+        cv2.rectangle(shown,(x,y),(x+w,y+h),(0,255,0),2)
     for b in blobs(bgr):
+        bx,by,bw,bh=b['bbox'];cx,cy=bx+bw/2,by+bh/2
+        # Ignore fragments/glow and the CHECK caption belonging to a matched icon.
+        if any(x-12<=cx<=x+w+12 and y-12<=cy<=y+h+(h*.7 if p['id']=='check_engine' else 12)
+               for p in priority for x,y,w,h in [p['bbox']]):
+            continue
         glyph, dist = classify(feature(b["crop"]))
         lid = resolve(glyph, b["color"])
         x, y, w, h = b["bbox"]
