@@ -1,0 +1,1423 @@
+{
+  "_meta": {
+    "description": "Synthetic Toyota Camry dash images. Ground truth for the vision model eval.",
+    "seed": 26,
+    "count": 60,
+    "with_fault": 36,
+    "without_fault": 24,
+    "generator": "dash_vision/generate_dataset.py"
+  },
+  "samples": [
+    {
+      "id": "camry_0000",
+      "generation": "XV30",
+      "model_year": 2002,
+      "hybrid": false,
+      "odometer": 230189,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0000.jpg",
+      "augmentation": {
+        "rotate_deg": 0.52,
+        "shear": -0.063,
+        "brightness": 1.13,
+        "contrast": 1.18,
+        "blur": 1.0,
+        "glare": false,
+        "noise": 0.7,
+        "jpeg_quality": 61
+      }
+    },
+    {
+      "id": "camry_0001",
+      "generation": "XV40",
+      "model_year": 2007,
+      "hybrid": false,
+      "odometer": 171781,
+      "unit": "mi",
+      "lights_on": [
+        "abs",
+        "srs_airbag",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0001.jpg",
+      "augmentation": {
+        "rotate_deg": -5.9,
+        "shear": -0.062,
+        "brightness": 1.23,
+        "contrast": 1.18,
+        "blur": 1.0,
+        "glare": true,
+        "noise": 3.3,
+        "jpeg_quality": 57
+      }
+    },
+    {
+      "id": "camry_0002",
+      "generation": "XV30",
+      "model_year": 2004,
+      "hybrid": false,
+      "odometer": 433805,
+      "unit": "km",
+      "lights_on": [
+        "check_engine"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0002.jpg",
+      "augmentation": {
+        "rotate_deg": -2.68,
+        "shear": 0.051,
+        "brightness": 0.88,
+        "contrast": 1.05,
+        "blur": 1.0,
+        "glare": true,
+        "noise": 2.0,
+        "jpeg_quality": 68
+      }
+    },
+    {
+      "id": "camry_0003",
+      "generation": "XV40",
+      "model_year": 2008,
+      "hybrid": false,
+      "odometer": 233854,
+      "unit": "mi",
+      "lights_on": [
+        "check_engine",
+        "oil_pressure"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0003.jpg",
+      "augmentation": {
+        "rotate_deg": -5.47,
+        "shear": -0.057,
+        "brightness": 0.83,
+        "contrast": 0.83,
+        "blur": 0.6,
+        "glare": true,
+        "noise": 8.5,
+        "jpeg_quality": 86
+      }
+    },
+    {
+      "id": "camry_0004",
+      "generation": "XV30",
+      "model_year": 2002,
+      "hybrid": false,
+      "odometer": 255940,
+      "unit": "mi",
+      "lights_on": [
+        "charging_system",
+        "eps"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0004.jpg",
+      "augmentation": {
+        "rotate_deg": -5.36,
+        "shear": -0.002,
+        "brightness": 0.76,
+        "contrast": 1.1,
+        "blur": 0,
+        "glare": true,
+        "noise": 4.2,
+        "jpeg_quality": 90
+      }
+    },
+    {
+      "id": "camry_0005",
+      "generation": "XV70",
+      "model_year": 2019,
+      "hybrid": false,
+      "odometer": 83650,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0005.jpg",
+      "augmentation": {
+        "rotate_deg": 0.96,
+        "shear": -0.004,
+        "brightness": 0.73,
+        "contrast": 0.9,
+        "blur": 0,
+        "glare": false,
+        "noise": 18.0,
+        "jpeg_quality": 74
+      }
+    },
+    {
+      "id": "camry_0006",
+      "generation": "XV40",
+      "model_year": 2011,
+      "hybrid": false,
+      "odometer": 104140,
+      "unit": "mi",
+      "lights_on": [
+        "abs",
+        "brake_system",
+        "coolant_temp",
+        "maintenance_required",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0006.jpg",
+      "augmentation": {
+        "rotate_deg": -5.99,
+        "shear": -0.07,
+        "brightness": 1.2,
+        "contrast": 1.2,
+        "blur": 1.6,
+        "glare": false,
+        "noise": 14.6,
+        "jpeg_quality": 59
+      }
+    },
+    {
+      "id": "camry_0007",
+      "generation": "XV40",
+      "model_year": 2010,
+      "hybrid": false,
+      "odometer": 301820,
+      "unit": "mi",
+      "lights_on": [
+        "srs_airbag",
+        "tpms"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0007.jpg",
+      "augmentation": {
+        "rotate_deg": -0.99,
+        "shear": 0.073,
+        "brightness": 0.84,
+        "contrast": 0.84,
+        "blur": 1.0,
+        "glare": false,
+        "noise": 6.6,
+        "jpeg_quality": 84
+      }
+    },
+    {
+      "id": "camry_0008",
+      "generation": "XV40",
+      "model_year": 2009,
+      "hybrid": true,
+      "odometer": 177876,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0008.jpg",
+      "augmentation": {
+        "rotate_deg": 1.07,
+        "shear": 0.019,
+        "brightness": 0.76,
+        "contrast": 0.99,
+        "blur": 0,
+        "glare": false,
+        "noise": 8.0,
+        "jpeg_quality": 83
+      }
+    },
+    {
+      "id": "camry_0009",
+      "generation": "XV70",
+      "model_year": 2019,
+      "hybrid": true,
+      "odometer": 54486,
+      "unit": "mi",
+      "lights_on": [
+        "check_engine",
+        "coolant_temp",
+        "pcs_warning",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0009.jpg",
+      "augmentation": {
+        "rotate_deg": -1.77,
+        "shear": -0.014,
+        "brightness": 1.19,
+        "contrast": 0.97,
+        "blur": 0,
+        "glare": true,
+        "noise": 12.3,
+        "jpeg_quality": 63
+      }
+    },
+    {
+      "id": "camry_0010",
+      "generation": "XV70",
+      "model_year": 2023,
+      "hybrid": false,
+      "odometer": 8284,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0010.jpg",
+      "augmentation": {
+        "rotate_deg": 0.88,
+        "shear": 0.059,
+        "brightness": 1.09,
+        "contrast": 1.03,
+        "blur": 0,
+        "glare": false,
+        "noise": 17.7,
+        "jpeg_quality": 81
+      }
+    },
+    {
+      "id": "camry_0011",
+      "generation": "XV30",
+      "model_year": 2002,
+      "hybrid": false,
+      "odometer": 214256,
+      "unit": "mi",
+      "lights_on": [
+        "coolant_temp"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0011.jpg",
+      "augmentation": {
+        "rotate_deg": 1.04,
+        "shear": -0.023,
+        "brightness": 1.01,
+        "contrast": 1.1,
+        "blur": 0,
+        "glare": true,
+        "noise": 12.7,
+        "jpeg_quality": 85
+      }
+    },
+    {
+      "id": "camry_0012",
+      "generation": "XV40",
+      "model_year": 2011,
+      "hybrid": false,
+      "odometer": 301454,
+      "unit": "mi",
+      "lights_on": [
+        "door_ajar",
+        "eps",
+        "srs_airbag"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0012.jpg",
+      "augmentation": {
+        "rotate_deg": 1.63,
+        "shear": -0.056,
+        "brightness": 0.78,
+        "contrast": 1.17,
+        "blur": 0,
+        "glare": false,
+        "noise": 9.7,
+        "jpeg_quality": 61
+      }
+    },
+    {
+      "id": "camry_0013",
+      "generation": "XV40",
+      "model_year": 2009,
+      "hybrid": false,
+      "odometer": 121334,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0013.jpg",
+      "augmentation": {
+        "rotate_deg": -1.03,
+        "shear": 0.07,
+        "brightness": 0.97,
+        "contrast": 0.92,
+        "blur": 1.6,
+        "glare": true,
+        "noise": 7.0,
+        "jpeg_quality": 85
+      }
+    },
+    {
+      "id": "camry_0014",
+      "generation": "XV50",
+      "model_year": 2017,
+      "hybrid": false,
+      "odometer": 35716,
+      "unit": "mi",
+      "lights_on": [
+        "coolant_temp",
+        "eps",
+        "low_fuel",
+        "pcs_warning"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0014.jpg",
+      "augmentation": {
+        "rotate_deg": 4.88,
+        "shear": -0.003,
+        "brightness": 1.15,
+        "contrast": 1.18,
+        "blur": 1.0,
+        "glare": true,
+        "noise": 13.7,
+        "jpeg_quality": 87
+      }
+    },
+    {
+      "id": "camry_0015",
+      "generation": "XV40",
+      "model_year": 2011,
+      "hybrid": false,
+      "odometer": 429891,
+      "unit": "km",
+      "lights_on": [
+        "abs",
+        "brake_system",
+        "check_engine",
+        "maintenance_required",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0015.jpg",
+      "augmentation": {
+        "rotate_deg": -2.06,
+        "shear": -0.023,
+        "brightness": 1.13,
+        "contrast": 0.99,
+        "blur": 0,
+        "glare": true,
+        "noise": 9.8,
+        "jpeg_quality": 71
+      }
+    },
+    {
+      "id": "camry_0016",
+      "generation": "XV70",
+      "model_year": 2020,
+      "hybrid": false,
+      "odometer": 101831,
+      "unit": "mi",
+      "lights_on": [
+        "brake_system"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0016.jpg",
+      "augmentation": {
+        "rotate_deg": 3.61,
+        "shear": 0.06,
+        "brightness": 0.75,
+        "contrast": 0.82,
+        "blur": 1.0,
+        "glare": true,
+        "noise": 12.8,
+        "jpeg_quality": 91
+      }
+    },
+    {
+      "id": "camry_0017",
+      "generation": "XV40",
+      "model_year": 2011,
+      "hybrid": false,
+      "odometer": 132168,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0017.jpg",
+      "augmentation": {
+        "rotate_deg": -3.95,
+        "shear": -0.065,
+        "brightness": 1.06,
+        "contrast": 0.81,
+        "blur": 0,
+        "glare": false,
+        "noise": 2.8,
+        "jpeg_quality": 76
+      }
+    },
+    {
+      "id": "camry_0018",
+      "generation": "XV50",
+      "model_year": 2012,
+      "hybrid": false,
+      "odometer": 205978,
+      "unit": "mi",
+      "lights_on": [
+        "at_oil_temp",
+        "coolant_temp",
+        "coolant_temp_cold",
+        "master_warning"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0018.jpg",
+      "augmentation": {
+        "rotate_deg": -4.66,
+        "shear": 0.01,
+        "brightness": 1.23,
+        "contrast": 1.09,
+        "blur": 0.6,
+        "glare": true,
+        "noise": 10.6,
+        "jpeg_quality": 73
+      }
+    },
+    {
+      "id": "camry_0019",
+      "generation": "XV50",
+      "model_year": 2013,
+      "hybrid": false,
+      "odometer": 120785,
+      "unit": "mi",
+      "lights_on": [
+        "vsc_off"
+      ],
+      "has_fault": false,
+      "file": "images/camry_0019.jpg",
+      "augmentation": {
+        "rotate_deg": -2.84,
+        "shear": 0.044,
+        "brightness": 1.02,
+        "contrast": 0.95,
+        "blur": 0,
+        "glare": true,
+        "noise": 0.9,
+        "jpeg_quality": 87
+      }
+    },
+    {
+      "id": "camry_0020",
+      "generation": "XV70",
+      "model_year": 2022,
+      "hybrid": false,
+      "odometer": 33637,
+      "unit": "mi",
+      "lights_on": [
+        "brake_system",
+        "eps"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0020.jpg",
+      "augmentation": {
+        "rotate_deg": 4.22,
+        "shear": 0.058,
+        "brightness": 1.21,
+        "contrast": 0.93,
+        "blur": 0,
+        "glare": false,
+        "noise": 15.7,
+        "jpeg_quality": 63
+      }
+    },
+    {
+      "id": "camry_0021",
+      "generation": "XV70",
+      "model_year": 2021,
+      "hybrid": false,
+      "odometer": 98691,
+      "unit": "mi",
+      "lights_on": [
+        "check_engine",
+        "maintenance_required",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0021.jpg",
+      "augmentation": {
+        "rotate_deg": 0.23,
+        "shear": 0.017,
+        "brightness": 0.75,
+        "contrast": 0.91,
+        "blur": 0.6,
+        "glare": true,
+        "noise": 0.8,
+        "jpeg_quality": 66
+      }
+    },
+    {
+      "id": "camry_0022",
+      "generation": "XV50",
+      "model_year": 2012,
+      "hybrid": false,
+      "odometer": 186886,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0022.jpg",
+      "augmentation": {
+        "rotate_deg": -1.11,
+        "shear": 0.053,
+        "brightness": 1.13,
+        "contrast": 0.84,
+        "blur": 0,
+        "glare": false,
+        "noise": 11.1,
+        "jpeg_quality": 63
+      }
+    },
+    {
+      "id": "camry_0023",
+      "generation": "XV70",
+      "model_year": 2023,
+      "hybrid": false,
+      "odometer": 26540,
+      "unit": "mi",
+      "lights_on": [
+        "brake_system"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0023.jpg",
+      "augmentation": {
+        "rotate_deg": 4.99,
+        "shear": -0.024,
+        "brightness": 0.91,
+        "contrast": 1.02,
+        "blur": 1.6,
+        "glare": false,
+        "noise": 17.0,
+        "jpeg_quality": 81
+      }
+    },
+    {
+      "id": "camry_0024",
+      "generation": "XV70",
+      "model_year": 2023,
+      "hybrid": false,
+      "odometer": 22107,
+      "unit": "mi",
+      "lights_on": [
+        "tpms"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0024.jpg",
+      "augmentation": {
+        "rotate_deg": -5.28,
+        "shear": 0.046,
+        "brightness": 0.83,
+        "contrast": 0.85,
+        "blur": 0,
+        "glare": false,
+        "noise": 7.4,
+        "jpeg_quality": 86
+      }
+    },
+    {
+      "id": "camry_0025",
+      "generation": "XV50",
+      "model_year": 2016,
+      "hybrid": false,
+      "odometer": 112451,
+      "unit": "mi",
+      "lights_on": [
+        "charging_system",
+        "low_washer_fluid",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0025.jpg",
+      "augmentation": {
+        "rotate_deg": 0.97,
+        "shear": -0.007,
+        "brightness": 1.13,
+        "contrast": 0.97,
+        "blur": 0,
+        "glare": false,
+        "noise": 12.0,
+        "jpeg_quality": 75
+      }
+    },
+    {
+      "id": "camry_0026",
+      "generation": "XV50",
+      "model_year": 2016,
+      "hybrid": false,
+      "odometer": 123721,
+      "unit": "mi",
+      "lights_on": [
+        "coolant_temp"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0026.jpg",
+      "augmentation": {
+        "rotate_deg": -4.35,
+        "shear": -0.042,
+        "brightness": 0.74,
+        "contrast": 0.95,
+        "blur": 1.0,
+        "glare": false,
+        "noise": 7.3,
+        "jpeg_quality": 77
+      }
+    },
+    {
+      "id": "camry_0027",
+      "generation": "XV30",
+      "model_year": 2002,
+      "hybrid": false,
+      "odometer": 262000,
+      "unit": "mi",
+      "lights_on": [
+        "check_engine",
+        "seatbelt",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0027.jpg",
+      "augmentation": {
+        "rotate_deg": -5.86,
+        "shear": 0.023,
+        "brightness": 0.91,
+        "contrast": 1.15,
+        "blur": 0.6,
+        "glare": false,
+        "noise": 16.1,
+        "jpeg_quality": 83
+      }
+    },
+    {
+      "id": "camry_0028",
+      "generation": "XV50",
+      "model_year": 2015,
+      "hybrid": false,
+      "odometer": 154690,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0028.jpg",
+      "augmentation": {
+        "rotate_deg": 0.93,
+        "shear": -0.038,
+        "brightness": 1.08,
+        "contrast": 0.97,
+        "blur": 1.0,
+        "glare": false,
+        "noise": 14.7,
+        "jpeg_quality": 88
+      }
+    },
+    {
+      "id": "camry_0029",
+      "generation": "XV30",
+      "model_year": 2005,
+      "hybrid": false,
+      "odometer": 607616,
+      "unit": "mi",
+      "lights_on": [
+        "abs",
+        "brake_system",
+        "seatbelt",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0029.jpg",
+      "augmentation": {
+        "rotate_deg": -0.2,
+        "shear": 0.044,
+        "brightness": 0.82,
+        "contrast": 0.88,
+        "blur": 0.6,
+        "glare": false,
+        "noise": 12.7,
+        "jpeg_quality": 69
+      }
+    },
+    {
+      "id": "camry_0030",
+      "generation": "XV70",
+      "model_year": 2024,
+      "hybrid": true,
+      "odometer": 21541,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0030.jpg",
+      "augmentation": {
+        "rotate_deg": -0.46,
+        "shear": 0.02,
+        "brightness": 0.79,
+        "contrast": 0.8,
+        "blur": 1.6,
+        "glare": false,
+        "noise": 1.1,
+        "jpeg_quality": 86
+      }
+    },
+    {
+      "id": "camry_0031",
+      "generation": "XV30",
+      "model_year": 2006,
+      "hybrid": false,
+      "odometer": 182412,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0031.jpg",
+      "augmentation": {
+        "rotate_deg": 2.46,
+        "shear": 0.036,
+        "brightness": 1.11,
+        "contrast": 0.98,
+        "blur": 1.6,
+        "glare": false,
+        "noise": 6.8,
+        "jpeg_quality": 67
+      }
+    },
+    {
+      "id": "camry_0032",
+      "generation": "XV50",
+      "model_year": 2012,
+      "hybrid": false,
+      "odometer": 213863,
+      "unit": "km",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0032.jpg",
+      "augmentation": {
+        "rotate_deg": 3.02,
+        "shear": -0.075,
+        "brightness": 1.16,
+        "contrast": 1.06,
+        "blur": 0,
+        "glare": false,
+        "noise": 4.8,
+        "jpeg_quality": 59
+      }
+    },
+    {
+      "id": "camry_0033",
+      "generation": "XV40",
+      "model_year": 2009,
+      "hybrid": false,
+      "odometer": 105783,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0033.jpg",
+      "augmentation": {
+        "rotate_deg": -5.57,
+        "shear": -0.057,
+        "brightness": 1.03,
+        "contrast": 0.88,
+        "blur": 1.6,
+        "glare": false,
+        "noise": 3.8,
+        "jpeg_quality": 68
+      }
+    },
+    {
+      "id": "camry_0034",
+      "generation": "XV40",
+      "model_year": 2010,
+      "hybrid": false,
+      "odometer": 143715,
+      "unit": "mi",
+      "lights_on": [
+        "charging_system",
+        "door_ajar",
+        "maintenance_required"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0034.jpg",
+      "augmentation": {
+        "rotate_deg": 1.71,
+        "shear": 0.045,
+        "brightness": 1.06,
+        "contrast": 0.8,
+        "blur": 0.6,
+        "glare": false,
+        "noise": 15.9,
+        "jpeg_quality": 65
+      }
+    },
+    {
+      "id": "camry_0035",
+      "generation": "XV80",
+      "model_year": 2025,
+      "hybrid": true,
+      "odometer": 11011,
+      "unit": "mi",
+      "lights_on": [
+        "brake_system",
+        "check_engine",
+        "check_hybrid_system",
+        "maintenance_required",
+        "master_warning",
+        "vsc_off",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0035.jpg",
+      "augmentation": {
+        "rotate_deg": -2.85,
+        "shear": -0.018,
+        "brightness": 1.12,
+        "contrast": 0.99,
+        "blur": 1.0,
+        "glare": false,
+        "noise": 2.3,
+        "jpeg_quality": 85
+      }
+    },
+    {
+      "id": "camry_0036",
+      "generation": "XV40",
+      "model_year": 2008,
+      "hybrid": false,
+      "odometer": 123852,
+      "unit": "mi",
+      "lights_on": [
+        "abs",
+        "brake_system",
+        "vsc_off",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0036.jpg",
+      "augmentation": {
+        "rotate_deg": 2.83,
+        "shear": -0.077,
+        "brightness": 0.82,
+        "contrast": 0.96,
+        "blur": 0,
+        "glare": true,
+        "noise": 2.6,
+        "jpeg_quality": 92
+      }
+    },
+    {
+      "id": "camry_0037",
+      "generation": "XV50",
+      "model_year": 2016,
+      "hybrid": false,
+      "odometer": 154845,
+      "unit": "mi",
+      "lights_on": [
+        "low_washer_fluid"
+      ],
+      "has_fault": false,
+      "file": "images/camry_0037.jpg",
+      "augmentation": {
+        "rotate_deg": -1.1,
+        "shear": -0.001,
+        "brightness": 1.22,
+        "contrast": 0.99,
+        "blur": 1.6,
+        "glare": false,
+        "noise": 16.1,
+        "jpeg_quality": 80
+      }
+    },
+    {
+      "id": "camry_0038",
+      "generation": "XV70",
+      "model_year": 2020,
+      "hybrid": false,
+      "odometer": 35602,
+      "unit": "mi",
+      "lights_on": [
+        "at_oil_temp",
+        "master_warning",
+        "tpms",
+        "vsc_trac"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0038.jpg",
+      "augmentation": {
+        "rotate_deg": 4.3,
+        "shear": 0.02,
+        "brightness": 0.84,
+        "contrast": 1.14,
+        "blur": 1.6,
+        "glare": false,
+        "noise": 9.4,
+        "jpeg_quality": 86
+      }
+    },
+    {
+      "id": "camry_0039",
+      "generation": "XV80",
+      "model_year": 2025,
+      "hybrid": true,
+      "odometer": 13331,
+      "unit": "mi",
+      "lights_on": [
+        "tpms"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0039.jpg",
+      "augmentation": {
+        "rotate_deg": 4.03,
+        "shear": -0.009,
+        "brightness": 0.79,
+        "contrast": 0.93,
+        "blur": 0,
+        "glare": false,
+        "noise": 1.4,
+        "jpeg_quality": 79
+      }
+    },
+    {
+      "id": "camry_0040",
+      "generation": "XV50",
+      "model_year": 2014,
+      "hybrid": false,
+      "odometer": 313036,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0040.jpg",
+      "augmentation": {
+        "rotate_deg": 0.75,
+        "shear": 0.006,
+        "brightness": 0.97,
+        "contrast": 1.12,
+        "blur": 1.0,
+        "glare": false,
+        "noise": 6.5,
+        "jpeg_quality": 73
+      }
+    },
+    {
+      "id": "camry_0041",
+      "generation": "XV80",
+      "model_year": 2025,
+      "hybrid": true,
+      "odometer": 15041,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0041.jpg",
+      "augmentation": {
+        "rotate_deg": 2.61,
+        "shear": 0.028,
+        "brightness": 1.02,
+        "contrast": 1.03,
+        "blur": 1.6,
+        "glare": true,
+        "noise": 5.8,
+        "jpeg_quality": 77
+      }
+    },
+    {
+      "id": "camry_0042",
+      "generation": "XV80",
+      "model_year": 2025,
+      "hybrid": true,
+      "odometer": 12921,
+      "unit": "mi",
+      "lights_on": [
+        "charging_system",
+        "check_hybrid_system",
+        "master_warning"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0042.jpg",
+      "augmentation": {
+        "rotate_deg": -0.11,
+        "shear": -0.046,
+        "brightness": 0.84,
+        "contrast": 0.83,
+        "blur": 0.6,
+        "glare": true,
+        "noise": 3.6,
+        "jpeg_quality": 75
+      }
+    },
+    {
+      "id": "camry_0043",
+      "generation": "XV40",
+      "model_year": 2008,
+      "hybrid": true,
+      "odometer": 295320,
+      "unit": "mi",
+      "lights_on": [
+        "brake_system",
+        "check_engine",
+        "check_hybrid_system",
+        "master_warning",
+        "srs_airbag"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0043.jpg",
+      "augmentation": {
+        "rotate_deg": 3.95,
+        "shear": 0.015,
+        "brightness": 1.18,
+        "contrast": 0.86,
+        "blur": 0,
+        "glare": false,
+        "noise": 14.8,
+        "jpeg_quality": 92
+      }
+    },
+    {
+      "id": "camry_0044",
+      "generation": "XV70",
+      "model_year": 2024,
+      "hybrid": false,
+      "odometer": 14731,
+      "unit": "mi",
+      "lights_on": [
+        "low_washer_fluid"
+      ],
+      "has_fault": false,
+      "file": "images/camry_0044.jpg",
+      "augmentation": {
+        "rotate_deg": 2.15,
+        "shear": -0.064,
+        "brightness": 1.18,
+        "contrast": 0.85,
+        "blur": 1.0,
+        "glare": false,
+        "noise": 9.7,
+        "jpeg_quality": 74
+      }
+    },
+    {
+      "id": "camry_0045",
+      "generation": "XV70",
+      "model_year": 2023,
+      "hybrid": false,
+      "odometer": 42766,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0045.jpg",
+      "augmentation": {
+        "rotate_deg": 3.64,
+        "shear": 0.07,
+        "brightness": 0.71,
+        "contrast": 1.12,
+        "blur": 0.6,
+        "glare": true,
+        "noise": 1.8,
+        "jpeg_quality": 91
+      }
+    },
+    {
+      "id": "camry_0046",
+      "generation": "XV40",
+      "model_year": 2007,
+      "hybrid": false,
+      "odometer": 413879,
+      "unit": "km",
+      "lights_on": [
+        "at_oil_temp",
+        "brake_system",
+        "check_engine"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0046.jpg",
+      "augmentation": {
+        "rotate_deg": 5.76,
+        "shear": 0.054,
+        "brightness": 1.24,
+        "contrast": 1.18,
+        "blur": 0,
+        "glare": false,
+        "noise": 16.6,
+        "jpeg_quality": 75
+      }
+    },
+    {
+      "id": "camry_0047",
+      "generation": "XV70",
+      "model_year": 2020,
+      "hybrid": false,
+      "odometer": 77375,
+      "unit": "mi",
+      "lights_on": [
+        "charging_system",
+        "maintenance_required"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0047.jpg",
+      "augmentation": {
+        "rotate_deg": 1.43,
+        "shear": -0.012,
+        "brightness": 0.78,
+        "contrast": 0.81,
+        "blur": 0,
+        "glare": true,
+        "noise": 13.8,
+        "jpeg_quality": 87
+      }
+    },
+    {
+      "id": "camry_0048",
+      "generation": "XV50",
+      "model_year": 2016,
+      "hybrid": false,
+      "odometer": 193508,
+      "unit": "mi",
+      "lights_on": [
+        "low_washer_fluid"
+      ],
+      "has_fault": false,
+      "file": "images/camry_0048.jpg",
+      "augmentation": {
+        "rotate_deg": 1.56,
+        "shear": -0.079,
+        "brightness": 1.2,
+        "contrast": 0.94,
+        "blur": 0,
+        "glare": false,
+        "noise": 10.5,
+        "jpeg_quality": 89
+      }
+    },
+    {
+      "id": "camry_0049",
+      "generation": "XV30",
+      "model_year": 2004,
+      "hybrid": false,
+      "odometer": 410298,
+      "unit": "mi",
+      "lights_on": [
+        "maintenance_required"
+      ],
+      "has_fault": false,
+      "file": "images/camry_0049.jpg",
+      "augmentation": {
+        "rotate_deg": 4.86,
+        "shear": -0.05,
+        "brightness": 0.94,
+        "contrast": 0.91,
+        "blur": 1.6,
+        "glare": true,
+        "noise": 17.4,
+        "jpeg_quality": 82
+      }
+    },
+    {
+      "id": "camry_0050",
+      "generation": "XV40",
+      "model_year": 2008,
+      "hybrid": true,
+      "odometer": 235798,
+      "unit": "mi",
+      "lights_on": [
+        "charging_system",
+        "eps",
+        "low_washer_fluid",
+        "maintenance_required"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0050.jpg",
+      "augmentation": {
+        "rotate_deg": -2.54,
+        "shear": -0.073,
+        "brightness": 0.78,
+        "contrast": 1.17,
+        "blur": 0,
+        "glare": false,
+        "noise": 16.3,
+        "jpeg_quality": 68
+      }
+    },
+    {
+      "id": "camry_0051",
+      "generation": "XV80",
+      "model_year": 2026,
+      "hybrid": true,
+      "odometer": 6714,
+      "unit": "km",
+      "lights_on": [
+        "charging_system",
+        "pcs_warning"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0051.jpg",
+      "augmentation": {
+        "rotate_deg": 3.03,
+        "shear": 0.015,
+        "brightness": 0.82,
+        "contrast": 1.02,
+        "blur": 1.0,
+        "glare": false,
+        "noise": 4.9,
+        "jpeg_quality": 76
+      }
+    },
+    {
+      "id": "camry_0052",
+      "generation": "XV50",
+      "model_year": 2014,
+      "hybrid": true,
+      "odometer": 114864,
+      "unit": "mi",
+      "lights_on": [
+        "charging_system"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0052.jpg",
+      "augmentation": {
+        "rotate_deg": -3.42,
+        "shear": 0.003,
+        "brightness": 0.76,
+        "contrast": 1.18,
+        "blur": 0.6,
+        "glare": true,
+        "noise": 13.9,
+        "jpeg_quality": 91
+      }
+    },
+    {
+      "id": "camry_0053",
+      "generation": "XV40",
+      "model_year": 2009,
+      "hybrid": true,
+      "odometer": 223637,
+      "unit": "mi",
+      "lights_on": [
+        "low_washer_fluid"
+      ],
+      "has_fault": false,
+      "file": "images/camry_0053.jpg",
+      "augmentation": {
+        "rotate_deg": 5.88,
+        "shear": -0.035,
+        "brightness": 1.16,
+        "contrast": 1.05,
+        "blur": 1.0,
+        "glare": true,
+        "noise": 1.8,
+        "jpeg_quality": 60
+      }
+    },
+    {
+      "id": "camry_0054",
+      "generation": "XV40",
+      "model_year": 2008,
+      "hybrid": false,
+      "odometer": 195164,
+      "unit": "mi",
+      "lights_on": [
+        "charging_system",
+        "maintenance_required",
+        "oil_pressure",
+        "tpms"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0054.jpg",
+      "augmentation": {
+        "rotate_deg": -5.78,
+        "shear": 0.042,
+        "brightness": 0.84,
+        "contrast": 1.12,
+        "blur": 1.6,
+        "glare": false,
+        "noise": 12.7,
+        "jpeg_quality": 89
+      }
+    },
+    {
+      "id": "camry_0055",
+      "generation": "XV50",
+      "model_year": 2013,
+      "hybrid": false,
+      "odometer": 136619,
+      "unit": "mi",
+      "lights_on": [
+        "eps"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0055.jpg",
+      "augmentation": {
+        "rotate_deg": 3.86,
+        "shear": 0.08,
+        "brightness": 0.93,
+        "contrast": 1.03,
+        "blur": 0,
+        "glare": false,
+        "noise": 12.0,
+        "jpeg_quality": 63
+      }
+    },
+    {
+      "id": "camry_0056",
+      "generation": "XV40",
+      "model_year": 2009,
+      "hybrid": false,
+      "odometer": 150212,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0056.jpg",
+      "augmentation": {
+        "rotate_deg": 3.97,
+        "shear": 0.046,
+        "brightness": 1.11,
+        "contrast": 0.99,
+        "blur": 0,
+        "glare": false,
+        "noise": 10.1,
+        "jpeg_quality": 89
+      }
+    },
+    {
+      "id": "camry_0057",
+      "generation": "XV40",
+      "model_year": 2007,
+      "hybrid": false,
+      "odometer": 200320,
+      "unit": "mi",
+      "lights_on": [
+        "abs",
+        "brake_system",
+        "charging_system",
+        "maintenance_required"
+      ],
+      "has_fault": true,
+      "file": "images/camry_0057.jpg",
+      "augmentation": {
+        "rotate_deg": 3.93,
+        "shear": -0.034,
+        "brightness": 1.01,
+        "contrast": 0.93,
+        "blur": 0,
+        "glare": false,
+        "noise": 9.1,
+        "jpeg_quality": 89
+      }
+    },
+    {
+      "id": "camry_0058",
+      "generation": "XV70",
+      "model_year": 2021,
+      "hybrid": true,
+      "odometer": 79676,
+      "unit": "km",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0058.jpg",
+      "augmentation": {
+        "rotate_deg": -5.68,
+        "shear": -0.049,
+        "brightness": 0.76,
+        "contrast": 0.93,
+        "blur": 0,
+        "glare": true,
+        "noise": 2.0,
+        "jpeg_quality": 89
+      }
+    },
+    {
+      "id": "camry_0059",
+      "generation": "XV40",
+      "model_year": 2011,
+      "hybrid": false,
+      "odometer": 51317,
+      "unit": "mi",
+      "lights_on": [],
+      "has_fault": false,
+      "file": "images/camry_0059.jpg",
+      "augmentation": {
+        "rotate_deg": 3.56,
+        "shear": -0.07,
+        "brightness": 1.23,
+        "contrast": 0.94,
+        "blur": 1.0,
+        "glare": true,
+        "noise": 10.2,
+        "jpeg_quality": 68
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "base_model": "PekingU/rtdetr_v2_r18vd",
+  "base_revision": "5650961749fa93567c0d46fc7f43ea4f9e914107",
+  "classes": [
+    "dent",
+    "scratch"
+  ],
+  "train_images": 1840,
+  "optimizer_steps": 460,
+  "epochs_requested": 1,
+  "limited_run": false,
+  "device": "cpu",
+  "image_size": 320,
+  "training_seconds": 1615.5,
+  "initial_loss": 82.11578369140625,
+  "final_loss": 16.506072998046875,
+  "created_at": "2026-11-08T02:46:24.812044+00:00",
+  "evaluation_status": "evaluated_on_test",
+  "backbone_frozen": true,
+  "warning": "Experimental checkpoint. Requires held-out evaluation and verified clean negatives before real-world use."
+}
