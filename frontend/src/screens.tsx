@@ -1,18 +1,22 @@
+import Inspection from './vision/Inspection';
+import VisionReport from './vision/VisionReport';
+import type { InspectionResult } from './vision/client';
 import WorkshopFinder from './maps/WorkshopFinder';
-import { useEffect, useRef, useState } from 'react';
-import { TextInput, Switch } from 'react-native-web';
+import { useState } from 'react';
+import { Switch } from 'react-native-web';
 import { CarFront, Camera, Gauge, Droplet, TriangleAlert, Tag, ChevronRight, Phone, CalendarDays, Minus, Plus, Mic } from 'lucide-react';
 import { Box, Txt, Card, Row, Header, Label, Button, Tap, Segments, Progress, Badge, IconBox, ScoreRing, Toyota, red } from './ui';
 import { canAnalyze, costs, dealers, finance, issues, maintenance, money } from './domain';
 export type Screen = 'Home'|'Inspect'|'Forecast'|'Shop'|'Service'|'Report'|'Dealers'|'Voice';
-export type ScreenProps = {go:(screen:Screen)=>void;notify:(title:string,message:string)=>void};
+export type ScreenProps = {go:(screen:Screen)=>void;notify:(title:string,message:string)=>void;inspection?:InspectionResult|null;onInspection?:(report:InspectionResult)=>void};
 
-export function Home({go}:ScreenProps) {
-  return <><Box style={{marginTop:-52}}><Toyota/><Header title="Camry SE" sub="2019 · 84,210 miles"/></Box>
-    <Card style={{padding:20,gap:20}}><Row style={{gap:20}}><ScoreRing/><Box style={{flex:1,gap:5}}><Txt style={{color:red,fontSize:12,fontWeight:700,letterSpacing:.6}}>RELIABILITY</Txt><Txt style={{fontSize:22,fontWeight:700}}>Good shape</Txt><Txt ui="muted">Last scan Nov 2</Txt></Box></Row><Button onPress={()=>go('Inspect')}>Start inspection</Button></Card>
+export function Home({go,inspection}:ScreenProps) {
+  const live=inspection?.dashboard;const score=inspection?(live?live.reliability.score/10:null):7.4;
+  return <><Box style={{marginTop:-52}}><Toyota/><Header title="Camry SE" sub={`${inspection?.year??2019} · ${(inspection?.miles??84210).toLocaleString("en-US")} miles`}/></Box>
+    <Card style={{padding:20,gap:20}}><Row style={{gap:20}}><ScoreRing score={score}/><Box style={{flex:1,gap:5}}><Txt style={{color:red,fontSize:12,fontWeight:700,letterSpacing:.6}}>RELIABILITY</Txt><Txt style={{fontSize:22,fontWeight:700}}>{inspection?(score===null?'Score unavailable':score>=8?'Good shape':'Needs attention'):'Good shape'}</Txt><Txt ui="muted">{inspection?'Latest photo scan':'Last scan Nov 2'}</Txt></Box></Row><Button onPress={()=>go('Inspect')}>Start inspection</Button></Card>
     <Box><Label>UP NEXT</Label><Card>{[
       {icon:<Droplet size={20}/>,color:'red',title:'Oil change',sub:'Due in 1,240 mi',screen:'Service'},
-      {icon:<TriangleAlert size={20}/>,color:'amber',title:'Warning lights',sub:'2 found in your last scan',screen:'Report'},
+      {icon:<TriangleAlert size={20}/>,color:'amber',title:'Warning lights',sub:inspection?(live?`${live.reading.lights.length} matches in your latest photo`:'Dashboard analysis unavailable'):'2 found in your last scan',screen:'Report'},
       {icon:<Tag size={20}/>,color:'green',title:'Best dealer price',sub:'$930 below area average',screen:'Dealers'}
     ].map(item=><Tap key={item.title} ui="list-row" label={item.title} onPress={()=>go(item.screen as Screen)}><IconBox color={item.color}>{item.icon}</IconBox><Box style={{flex:1}}><Txt>{item.title}</Txt><Txt ui="muted">{item.sub}</Txt></Box><ChevronRight size={17} color="var(--muted)"/></Tap>)}</Card></Box>
   </>;
@@ -26,22 +30,8 @@ export function Forecast() {
       <Row style={{borderTop:'1px solid var(--line)',paddingTop:14,justifyContent:'space-between'}}><Txt style={{fontSize:14,fontWeight:600}}>Year {year+1}</Txt><Txt ui="muted" style={{fontSize:14}}>Keep {money(costs[year][0])} · New {money(costs[year][1])}</Txt></Row></Card>
   </>;
 }
-export function Inspect({go}:ScreenProps) {
-  const [photos,setPhotos] = useState({Exterior:'',Dashboard:''});const [busy,setBusy] = useState(false);const [error,setError] = useState('');
-  const urls=useRef<string[]>([]);const timer=useRef<ReturnType<typeof setTimeout>|null>(null);
-  useEffect(()=>()=>{urls.current.forEach(url=>URL.revokeObjectURL(url));if(timer.current)clearTimeout(timer.current);},[]);
-  function pick(kind:'Exterior'|'Dashboard', file?:File) {
-    if(!file)return;if(!file.type.startsWith('image/')){setError('Please choose an image.');return;}
-    if(file.size>15*1024*1024){setError('Choose an image smaller than 15 MB.');return;}
-    const url=URL.createObjectURL(file);urls.current.push(url);setError('');setPhotos(p=>({...p,[kind]:url}));
-  }
-  return <><Header title="Inspect" sub="Two photos, then we score your car."/>
-    <Box><Label>PHOTOS</Label><Card>{(['Exterior','Dashboard'] as const).map(kind=><Box ui="list-row" key={kind} style={{padding:16}}>{photos[kind]?<img className="photo-preview" src={photos[kind]} alt={`${kind} preview`}/>:<IconBox>{kind==='Exterior'?<CarFront size={24}/>:<Camera size={24}/>}</IconBox>}<Box style={{flex:1,gap:2}}><Txt style={{fontWeight:600}}>{kind} photo</Txt><Txt ui="muted">{kind==='Exterior'?'Photograph the whole car':'Gauges and warning lights visible'}</Txt></Box><label style={{padding:'9px 12px',borderRadius:22,background:'var(--card)',boxShadow:'0 5px 20px #0001',border:'1px solid var(--line)',color:red,fontSize:14,cursor:'pointer'}}>{photos[kind]?'Retake':'Take photo'}<input aria-label={`Add ${kind.toLowerCase()} photo`} className="photo-input" type="file" accept="image/*" capture="environment" onChange={e=>pick(kind,e.target.files?.[0])}/></label></Box>)}</Card>{error ? <Txt style={{color:red,fontSize:13,marginTop:8}}>{error}</Txt> : null}</Box>
-    <Box><Label>SERVICE HISTORY</Label><Card><TextInput accessibilityLabel="Service history" placeholder="Oil changes, repairs, new parts..." placeholderTextColor="#88888e" multiline style={{height:107,padding:18,color:'var(--text)',fontSize:16,outlineStyle:'none'} as never}/></Card><Txt ui="muted" style={{fontSize:12,marginTop:8,textAlign:'center'}}>Optional, but it makes your score more accurate.</Txt></Box>
-    <Box style={{gap:10}}><Button disabled={!canAnalyze(photos.Exterior,photos.Dashboard)||busy} label="Analyze" onPress={()=>{setBusy(true);timer.current=setTimeout(()=>go('Report'),1000);}}>{busy?'Analyzing demo…':'Analyze'}</Button><Txt ui="muted" style={{fontSize:12,textAlign:'center'}}>{canAnalyze(photos.Exterior,photos.Dashboard)?'Demo analysis · photos stay in your browser':'Take both photos to continue'}</Txt></Box>
-  </>;
-}
-export function Report({go}:ScreenProps) {return <><Header title="Report" sub="Nov 2 · 84,210 mi on the dash"/>
+export function Inspect({go,onInspection}:ScreenProps) {return <Inspection onComplete={report=>{onInspection?.(report);go('Report');}}/>;}
+export function Report({go,inspection}:ScreenProps) {if(inspection)return <VisionReport report={inspection} go={go}/>;return <><Header title="Report" sub="Nov 2 · 84,210 mi on the dash"/>
   <Card style={{padding:20}}><Row style={{justifyContent:'space-between'}}><Row style={{gap:3,alignItems:'baseline'}}><Txt style={{fontSize:58,lineHeight:65,fontWeight:700,letterSpacing:-2}}>7.4</Txt><Txt ui="muted">/10</Txt></Row><Badge tone="green">Good</Badge></Row><Progress percent={74}/></Card>
   <Box><Label>NEEDS ATTENTION · 4</Label><Card>{issues.map(([title,sub,priority])=><Box ui="list-row" key={title}><Box style={{flex:1}}><Txt>{title}</Txt><Txt ui="muted">{sub}</Txt></Box><Badge tone={priority==='Today'?'red':priority==='Minor'?'soft':'amber'}>{priority}</Badge></Box>)}</Card></Box>
   <Box style={{gap:12}}><Button onPress={()=>go('Forecast')}>See 10-year cost</Button><Button secondary onPress={()=>go('Service')}>Find a workshop</Button></Box><p className="demo-note">Illustrative report · no real vehicle diagnosis performed.</p>
