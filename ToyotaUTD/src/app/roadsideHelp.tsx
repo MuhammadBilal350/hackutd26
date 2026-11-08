@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { findNearestToyotaCenter } from "./roadsideFinder";
+import { findNearestToyotaCenter } from "../lib/roadsideFinder";
 
 export default function RoadsideHelp() {
   const [loading, setLoading] = useState(false);
