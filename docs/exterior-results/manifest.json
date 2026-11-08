@@ -1,0 +1,31 @@
+{
+  "dataset": "JijoJS/car-damage-new1",
+  "revision": "822ba322a726972cbe5be501bf15fb603d793eb3",
+  "license": "CC BY 4.0",
+  "attribution": "JIJO, car-damage-new, Roboflow Universe, 2024",
+  "source": "https://huggingface.co/datasets/JijoJS/car-damage-new1",
+  "archive_sha256": {
+    "test": "7c139e44ace587fbe5d6223190a21f2f2c0d1f57ed2e1d9e29082818a920d3d9",
+    "valid": "fc5e16794bf768c282856e2ead0aad795aafdfc048d1478b04f2ccc9e154ac2a",
+    "train": "5500d9e67cc253f2b176a3f862683373e9d4eefb2314028a4a62a197ae33465b"
+  },
+  "split_hygiene": {
+    "test": {
+      "original": 120,
+      "kept": 120,
+      "removed": 0
+    },
+    "validation": {
+      "original": 120,
+      "kept": 119,
+      "removed": 1
+    },
+    "train": {
+      "original": 2187,
+      "kept": 1840,
+      "removed": 347
+    }
+  },
+  "clean_negatives": "Only explicitly human-verified empty annotations are allowed. Public base split excludes unlabeled images.",
+  "limitations": "No car identity metadata available; perceptual dedup reduces but cannot rule out same-vehicle leakage."
+}
