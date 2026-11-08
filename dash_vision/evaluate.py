@@ -20,14 +20,17 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from reliability import score_dash
+if __package__:
+    from .reliability import score_dash
+else:
+    from reliability import score_dash
 
 TEXT_ONLY = {"check_hybrid_system", "at_oil_temp"}
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--labels", type=Path, default=Path("dataset/synthetic/labels.json"))
+    ap.add_argument("--labels", type=Path, default=Path(__file__).resolve().parents[1] / "dataset/synthetic/labels.json")
     ap.add_argument("--detector", default="cv", choices=["cv", "claude"])
     ap.add_argument("--limit", type=int)
     ap.add_argument("--dry-run", action="store_true", help="no detection; show reliability scores for the ground truth")
@@ -44,13 +47,19 @@ def main():
         return
 
     if args.detector == "cv":
-        import cv_detector
+        if __package__:
+            from . import cv_detector
+        else:
+            import cv_detector
 
         def run(path):
             return cv_detector.detect(path)
     else:
         import anthropic
-        from detector import detect
+        if __package__:
+            from .detector import detect
+        else:
+            from detector import detect
 
         client = anthropic.Anthropic()
         cache_path = root / "predictions.json"
