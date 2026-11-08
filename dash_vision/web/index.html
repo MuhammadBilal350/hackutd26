@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Camry / Vision Lab</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<header><a class="brand" href="/" aria-label="Camry Vision home"><span class="brand-icon">◈</span> CAMRY<span class="subbrand">VISION LAB</span></a><span class="connection"><i id="connection-dot"></i><span id="connection">Warming up detector</span></span></header>
+<main>
+<div class="intro"><div><p class="eyebrow">A LITTLE CLARITY. BEFORE THE DRIVE.</p><h1>Your dash.<br><span>Decoded.</span></h1></div><p class="intro-copy">Turn the lights on your dashboard into a clearer picture of your car. One photo. The stats that matter.</p></div>
+<div class="workspace">
+<section class="panel input-panel" aria-labelledby="input-title"><div class="panel-heading"><h2 id="input-title">01 <span>Get a reading</span></h2><span class="pill">ON DEVICE</span></div>
+<div class="tabs" role="tablist" aria-label="Image source"><button id="upload-tab" role="tab" aria-selected="true" aria-controls="upload-pane">Upload photo</button><button id="camera-tab" role="tab" aria-selected="false" aria-controls="camera-pane">Live camera</button></div>
+<div id="upload-pane" role="tabpanel" aria-labelledby="upload-tab"><label class="upload-zone" id="dropzone"><input type="file" id="photo" accept="image/jpeg,image/png,image/webp"><span class="upload-icon">↥</span><strong id="filename">Drop your dashboard photo</strong><span>or click to browse · JPG, PNG, WebP · up to 12 MB</span></label></div>
+<div id="camera-pane" role="tabpanel" aria-labelledby="camera-tab" hidden><div class="camera-box"><video id="camera" autoplay muted playsinline hidden></video><div id="camera-placeholder"><span class="upload-icon">◎</span><strong>Aim. Capture. Understand.</strong><p>Your camera stays on this device.</p></div><span id="live-badge" hidden>● LIVE</span></div><div class="camera-controls"><button id="start-camera" class="secondary">Start camera</button><button id="stop-camera" class="secondary" disabled>Stop</button><label class="live-toggle"><input type="checkbox" id="auto-live" disabled> Auto-analyze</label></div></div>
+<div class="vehicle-title">VEHICLE DETAILS <span>Optional, for a better estimate</span></div>
+<div class="fields"><label>Odometer<div class="mileage-field"><input id="miles" type="number" min="0" max="2000000" placeholder="e.g. 98,000"><select id="unit" aria-label="Odometer unit"><option value="mi">mi</option><option value="km">km</option></select></div></label><label>Model year<input id="year" type="number" min="1900" max="2027" placeholder="e.g. 2021"></label></div>
+<label class="hybrid"><input id="hybrid" type="checkbox"> Hybrid powertrain</label>
+<button class="primary" id="analyze" disabled><span id="analyze-label">Analyze dashboard</span><span>↗</span></button>
+<p class="status" id="status" role="status" aria-live="polite">Choose a photo or start your camera.</p>
+<p class="privacy">LOCAL PROCESSING <span>Images are analyzed on your computer. No cloud upload.</span></p>
+</section>
+<section class="results" aria-labelledby="results-title"><div class="results-heading"><h2 id="results-title">02 <span>Your insights</span></h2><span id="timestamp">AWAITING A READING</span></div>
+<div id="empty" class="panel empty"><div class="orbit"><span>◈</span></div><h3>The story behind the lights.</h3><p>Your reliability estimate, detected indicators and next steps will appear here.</p><div class="empty-tags"><span>RELIABILITY</span><span>WARNINGS</span><span>PERFORMANCE</span></div></div>
+<div id="report" hidden><div id="report-warning" class="warning" hidden></div><div class="panel score-panel"><div><p class="eyebrow">RELIABILITY ESTIMATE</p><div class="score-line"><span id="score">—</span><small>/ 100</small><span id="grade" class="grade">—</span></div><p id="score-description"></p></div><div class="score-ring" id="score-ring"><span id="ring-grade">—</span><small>GRADE</small></div></div>
+<div class="metric-grid"><div class="panel metric"><span>DRIVING GUIDANCE</span><strong id="drive">—</strong><small id="severity">—</small></div><div class="panel metric"><span>REPAIR ESTIMATE</span><strong id="repair">—</strong><small>Broad estimate · inspection needed</small></div></div>
+<div class="panel detail-panel"><div class="section-label"><h3>Detected indicators</h3><span id="light-count">0 FOUND</span></div><div id="lights"></div></div>
+<div class="panel detail-panel"><div class="section-label"><h3>Performance impact</h3><span>ESTIMATED</span></div><div id="performance"></div></div>
+<div class="panel detail-panel"><div class="section-label"><h3>What to do next</h3><button id="download" class="text-button">Export stats ↓</button></div><ol id="actions"></ol></div>
+<p class="disclaimer" id="limitations"></p></div>
+</section></div>
+<footer><span>CAMRY VISION / EXPERIMENTAL</span><span>Better information. More confident decisions.</span></footer>
+</main></body></html>

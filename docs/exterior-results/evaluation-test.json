@@ -1,0 +1,13 @@
+{
+  "split": "test",
+  "evaluated_images": 120,
+  "limited_evaluation": false,
+  "map_50_95": 0.0185,
+  "map_50": 0.0367,
+  "recall_100": 0.3344,
+  "mean_inference_ms": 235.0,
+  "device": "cpu",
+  "clean_sample_count": 0,
+  "clean_false_positive_rate": null,
+  "limitations": "No verified clean-car test set or vehicle-identity grouping. mAP on this source does not establish real-world accuracy, durability, or resale-price accuracy."
+}
