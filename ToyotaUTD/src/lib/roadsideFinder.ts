@@ -359,6 +359,6 @@ set -a
 source .env
 set +a
 
-npx tsx -e "import('./src/app/roadsideFinder.ts').then(async m => { const r = await m.findNearestToyotaCenter({lat:32.9483,lon:-96.7299}); console.log('CENTERS FOUND:',r.centers.length); console.log('NEAREST:',r.nearest); console.log('RESULTS:',r.centers); console.log('FALLBACK:',r.usedFallback); }).catch(console.error)"
+npx tsx -e "import('./src/lib/roadsideFinder.ts').then(async m => { const r = await m.findNearestToyotaCenter({lat:32.9483,lon:-96.7299}); console.log('CENTERS FOUND:',r.centers.length); console.log('NEAREST:',r.nearest); console.log('RESULTS:',r.centers); console.log('FALLBACK:',r.usedFallback); }).catch(console.error)"
   */
 }

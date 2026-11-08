@@ -1,3 +1,5 @@
 ToyotaUTD/src/.env
 ToyotaUTD/.env
 ToyotaUTD/.env.save
+.vercel
+.env*
