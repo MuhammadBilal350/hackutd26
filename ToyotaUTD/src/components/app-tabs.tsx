@@ -27,6 +27,11 @@ export default function AppTabs() {
           renderingMode="template"
         />
       </NativeTabs.Trigger>
+
+      <NativeTabs.Trigger name="voice">
+        <NativeTabs.Trigger.Label>Voice</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="waveform" />
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }
