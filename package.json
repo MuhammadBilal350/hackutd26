@@ -1,0 +1,11 @@
+{
+  "name": "toyota-companion-integration",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "test": "npm --prefix frontend test",
+    "build": "npm --prefix frontend run build",
+    "check:mobile": "npm --prefix ToyotaUTD run lint && npm --prefix ToyotaUTD run typecheck",
+    "check:backend": "npm --prefix db/spacetime-backend/spacetimedb run typecheck"
+  }
+}
