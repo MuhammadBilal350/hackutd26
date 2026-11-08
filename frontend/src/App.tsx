@@ -4,6 +4,7 @@ import { View } from 'react-native-web';
 import { Box, Txt, Tap, Button } from './ui';
 import { Home, Inspect, Forecast, Shop, Service, Report, Dealers, Voice, type Screen } from './screens';
 import { IPHONE, previewScale } from './device';
+import type { InspectionResult } from './vision/client';
 function initialTheme() { try{return localStorage.getItem('camry-theme')==='dark'?'dark':'light';}catch{return 'light';} }
 export default function App() {
   const fitScale=()=>previewScale(window.innerWidth,window.innerHeight);
@@ -11,10 +12,11 @@ export default function App() {
   useEffect(()=>{const resize=()=>setScale(fitScale());window.addEventListener('resize',resize);return()=>window.removeEventListener('resize',resize);},[]);
   const [screen,setScreen]=useState<Screen>('Home');const [theme,setTheme]=useState(initialTheme);
   const [previous,setPrevious]=useState<Screen>('Home');const [modal,setModal]=useState<{title:string;message:string}|null>(null);
+  const [inspection,setInspection]=useState<InspectionResult|null>(null);
   useEffect(()=>{document.documentElement.dataset.theme=theme;try{localStorage.setItem('camry-theme',theme);}catch{/* storage unavailable */}},[theme]);
   function go(next:Screen) {setPrevious(screen);setScreen(next);}
   const notify=(title:string,message:string)=>setModal({title,message});
-  const props={go,notify};
+  const props={go,notify,inspection,onInspection:setInspection};
   const content={Home:<Home {...props}/>,Inspect:<Inspect {...props}/>,Forecast:<Forecast/>,Shop:<Shop {...props}/>,Service:<Service {...props}/>,Report:<Report {...props}/>,Dealers:<Dealers {...props}/>,Voice:<Voice/>}[screen];
   const active=screen==='Report'?'Inspect':screen==='Dealers'?'Shop':screen;
   return <div className="iphone-stage" style={{width:IPHONE.width*scale,height:IPHONE.height*scale}}><div className="iphone-frame" style={{transform:`scale(${scale})`}}><View nativeID="app" dataSet={{theme,screen}} {...{className:theme}}>
