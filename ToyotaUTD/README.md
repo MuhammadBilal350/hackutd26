@@ -12,7 +12,7 @@ For local development, run `npm run web` and open the address Expo prints. To cr
 npm run build:web
 ```
 
-To deploy with Vercel, import this repository and set **Root Directory** to `ToyotaUTD`. The included `vercel.json` builds the static Expo web export into `dist`. Add `EXPO_PUBLIC_GEOAPIFY_API_KEY` in Vercel's environment settings only if the map feature needs it. Keep ElevenLabs and NVIDIA secret keys on the SpacetimeDB/backend side; never use an `EXPO_PUBLIC_` prefix for secrets.
+To deploy with Vercel, import this repository and set **Root Directory** to `ToyotaUTD`. The included `vercel.json` builds the static Expo web export into `dist`. Add `EXPO_PUBLIC_GEOAPIFY_API_KEY` in Vercel's environment settings only if the map feature needs it. Keep provider secret keys in server-side configuration or provider-managed agent settings; never use an `EXPO_PUBLIC_` prefix for secrets.
 
 ## Native iOS development
 
