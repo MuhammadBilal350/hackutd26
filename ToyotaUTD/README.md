@@ -5,14 +5,13 @@ This is a mobile-first Expo Router app. The voice assistant uses ElevenLabs Conv
 ## Run on a phone
 
 1. Install dependencies with `npm install`.
-2. Build and install the development app once:
+2. Build the iOS development app:
 
    ```bash
    npx eas-cli@latest build --profile development --platform ios
-   # or use --platform android
    ```
 
-   Follow the EAS prompts to sign in and install the resulting app on your phone. Scanning the QR code with Expo Go will not enable real-time voice.
+   Install the resulting app on your iPhone. Scanning the QR code with Expo Go will not enable real-time voice.
 3. Start Metro for the installed development app:
 
    ```bash
