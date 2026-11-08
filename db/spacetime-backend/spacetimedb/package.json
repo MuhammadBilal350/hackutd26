@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "build": "spacetime build",
+    "typecheck": "tsc --noEmit",
     "publish": "spacetime publish"
   },
   "keywords": [],
