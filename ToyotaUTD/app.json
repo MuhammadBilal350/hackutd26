@@ -9,7 +9,6 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.worldwaitingonme.toyotautd",
       "infoPlist": {
         "NSMicrophoneUsageDescription": "Toyota uses your microphone so you can talk with the voice assistant.",
         "ITSAppUsesNonExemptEncryption": false
