@@ -13,7 +13,10 @@ from __future__ import annotations
 import argparse
 import json
 
-from reliability import score_dash
+if __package__:
+    from .reliability import score_dash
+else:
+    from reliability import score_dash
 
 
 def main():
@@ -30,14 +33,20 @@ def main():
     args = ap.parse_args()
 
     if args.detector == "cv":
-        import cv_detector
+        if __package__:
+            from . import cv_detector
+        else:
+            import cv_detector
 
         reading = cv_detector.detect(args.image)
         reading.pop("_rejected_blobs", None)
         if args.debug:
             cv_detector.debug_image(args.image, args.debug)
     else:
-        from detector import DetectionRefused, detect
+        if __package__:
+            from .detector import DetectionRefused, detect
+        else:
+            from detector import DetectionRefused, detect
 
         try:
             reading = detect(args.image)
