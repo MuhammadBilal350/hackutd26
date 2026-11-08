@@ -2,3 +2,7 @@
 node_modules/
 ToyotaUTD/src/.env
 ToyotaUTD/.env
+ToyotaUTD/.env.save
+.env.local
+ToyotaUTD/src/constants/.env
+ToyotaUTD/src/app/.env
