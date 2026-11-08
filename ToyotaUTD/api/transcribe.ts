@@ -43,7 +43,9 @@ export default async function handler(
       { type: mimeType || "audio/m4a" }
     );
 
-    form.append("file", audioBlob, "recording.m4a");
+    const extension =
+      mimeType === "audio/webm" ? "webm" : "m4a";
+    form.append("file", audioBlob, `recording.${extension}`);
     form.append("model_id", "scribe_v2");
 
     const response = await fetch(

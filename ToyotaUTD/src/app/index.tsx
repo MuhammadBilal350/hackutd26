@@ -81,6 +81,44 @@ function moneyInput(value: string, fallback: number) {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+async function normalizePhotoForNvidia(
+  dataUrl: string,
+  mimeType: string | undefined
+) {
+  if (Platform.OS !== "web") {
+    return `data:${mimeType || "image/jpeg"};base64,${dataUrl}`;
+  }
+
+  return new Promise<string>((resolve, reject) => {
+    const image = new window.Image();
+    image.onload = () => {
+      const canvas = window.document.createElement("canvas");
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+
+      const context = canvas.getContext("2d");
+      if (!context) {
+        reject(new Error("Could not prepare the photo for analysis."));
+        return;
+      }
+
+      const scale = Math.min(
+        1,
+        2048 / image.naturalWidth,
+        2048 / image.naturalHeight
+      );
+      canvas.width = Math.round(image.naturalWidth * scale);
+      canvas.height = Math.round(image.naturalHeight * scale);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/jpeg", 0.82));
+    };
+    image.onerror = () => {
+      reject(new Error("Could not read the selected photo."));
+    };
+    image.src = `data:${mimeType || "image/jpeg"};base64,${dataUrl}`;
+  });
+}
+
 function AppButton({
   title,
   onPress,
@@ -155,6 +193,7 @@ export default function HomeScreen() {
   );
 
   const [analysis, setAnalysis] = useState("");
+  const [assistantError, setAssistantError] = useState("");
   const [busy, setBusy] = useState(false);
   const [recording, setRecording] = useState(false);
   const [mapResult, setMapResult] = useState<FinderResult | null>(null);
@@ -263,9 +302,13 @@ export default function HomeScreen() {
       }
 
       const mime = asset.mimeType || "image/jpeg";
+      const normalizedPhoto = await normalizePhotoForNvidia(
+        asset.base64,
+        mime
+      );
 
       setImageUri(asset.uri);
-      setImageDataUrl(`data:${mime};base64,${asset.base64}`);
+      setImageDataUrl(normalizedPhoto);
       setAnalysis("");
     } catch (error) {
       Alert.alert(
@@ -287,6 +330,7 @@ export default function HomeScreen() {
 
     setBusy(true);
     setAnalysis("");
+    setAssistantError("");
 
     try {
       let nearbyServices = "";
@@ -351,9 +395,12 @@ export default function HomeScreen() {
         await generateSpeech(data.answer);
       }
     } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Analysis failed.";
+      setAssistantError(message);
       Alert.alert(
         "Analysis error",
-        error instanceof Error ? error.message : "Analysis failed."
+        message
       );
     } finally {
       setMapLoading(false);
@@ -374,10 +421,13 @@ export default function HomeScreen() {
       setSpeechBase64(data.audioBase64);
       await playSpeech(data.audioBase64);
     } catch (error) {
-      setSpeechStatus("Speech could not be generated.");
+      const message =
+        error instanceof Error ? error.message : "Could not generate speech.";
+      setSpeechStatus(message);
+      setAssistantError(message);
       Alert.alert(
         "Voice error",
-        error instanceof Error ? error.message : "Could not generate speech."
+        message
       );
     } finally {
       setSpeechBusy(false);
@@ -398,7 +448,9 @@ export default function HomeScreen() {
         await player.play();
         setSpeechStatus("Speaking…");
       } catch {
-        setSpeechStatus("Tap “Play spoken answer” to hear the reply.");
+        setSpeechStatus(
+          "Playback was blocked. Tap “Play spoken answer” and check your device volume."
+        );
       }
       return;
     }
@@ -481,20 +533,25 @@ export default function HomeScreen() {
 
       const data = await postJSON("/api/transcribe", {
         audioBase64,
-        mimeType: "audio/m4a",
+        mimeType: Platform.OS === "web" ? "audio/webm" : "audio/m4a",
       });
 
       if (data.text) {
         setQuestion(data.text);
         await analyzeVehicle(data.text, true);
       } else {
-        Alert.alert("No speech detected", "Please try again.");
+        const message = "No speech was detected. Please try again.";
+        setAssistantError(message);
+        Alert.alert("No speech detected", message);
       }
     } catch (error) {
       setRecording(false);
+      const message =
+        error instanceof Error ? error.message : "Could not transcribe.";
+      setAssistantError(message);
       Alert.alert(
         "Transcription error",
-        error instanceof Error ? error.message : "Could not transcribe."
+        message
       );
     }
   }
@@ -699,6 +756,14 @@ export default function HomeScreen() {
             style={styles.loader}
           />
         )}
+
+        {assistantError ? (
+          <View style={styles.errorBox}>
+            <Text accessibilityLiveRegion="polite" style={styles.errorText}>
+              {assistantError}
+            </Text>
+          </View>
+        ) : null}
 
         {analysis ? (
           <View style={styles.answerBox}>
@@ -1137,6 +1202,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#2B4659",
+  },
+  errorBox: {
+    marginTop: 14,
+    padding: 12,
+    backgroundColor: "#2A171D",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#7A3442",
+  },
+  errorText: {
+    color: "#FFB3BE",
+    fontSize: 13,
+    lineHeight: 20,
   },
   answerTitle: {
     color: "#55D6BE",

@@ -4,7 +4,7 @@ const NVIDIA_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 const REASONING_MODEL =
   process.env.NVIDIA_MODEL || "nvidia/nemotron-3.5-lightning-30b-a3b";
 const VISION_MODEL =
-  process.env.NVIDIA_VISION_MODEL || "qwen/qwen3.5-397b-a17b";
+  process.env.NVIDIA_VISION_MODEL || "nvidia/nemotron-3.5-super-vl-120b-a12b";
 
 function getNvidiaApiKey() {
   const configuredKey = process.env.NVIDIA_API_KEY?.trim();
