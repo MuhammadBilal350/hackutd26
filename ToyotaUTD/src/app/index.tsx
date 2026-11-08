@@ -25,6 +25,11 @@ import {
   formatMoney,
 } from "../lib/finance";
 import type { FinderResult } from "../lib/roadsideFinder";
+import type { SavedServiceCenter } from "../lib/spacetime";
+import {
+  connectToSpacetimeDB,
+  sendSpacetimeMessage,
+} from "../lib/spacetime";
 
 const API_BASE = (process.env.EXPO_PUBLIC_API_URL || "").replace(/\/$/, "");
 
@@ -91,30 +96,34 @@ async function normalizePhotoForNvidia(
 
   return new Promise<string>((resolve, reject) => {
     const image = new window.Image();
+
     image.onload = () => {
       const canvas = window.document.createElement("canvas");
-      canvas.width = image.naturalWidth;
-      canvas.height = image.naturalHeight;
-
-      const context = canvas.getContext("2d");
-      if (!context) {
-        reject(new Error("Could not prepare the photo for analysis."));
-        return;
-      }
 
       const scale = Math.min(
         1,
         2048 / image.naturalWidth,
         2048 / image.naturalHeight
       );
+
       canvas.width = Math.round(image.naturalWidth * scale);
       canvas.height = Math.round(image.naturalHeight * scale);
+
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        reject(new Error("Could not prepare the photo for analysis."));
+        return;
+      }
+
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
       resolve(canvas.toDataURL("image/jpeg", 0.82));
     };
+
     image.onerror = () => {
       reject(new Error("Could not read the selected photo."));
     };
+
     image.src = `data:${mimeType || "image/jpeg"};base64,${dataUrl}`;
   });
 }
@@ -198,8 +207,11 @@ export default function HomeScreen() {
   const [recording, setRecording] = useState(false);
   const [mapResult, setMapResult] = useState<FinderResult | null>(null);
   const [mapLoading, setMapLoading] = useState(false);
+  const [savedServiceCenters, setSavedServiceCenters] = useState<SavedServiceCenter[]>([]);
   const [autoSpeak, setAutoSpeak] = useState(true);
+
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
+
   const [speechBase64, setSpeechBase64] = useState("");
   const [speechBusy, setSpeechBusy] = useState(false);
   const [speechStatus, setSpeechStatus] = useState("");
@@ -216,28 +228,47 @@ export default function HomeScreen() {
   const [loanTerm, setLoanTerm] = useState("60");
   const [newMaintenance, setNewMaintenance] = useState("500");
   const [newResale, setNewResale] = useState("10000");
+
   const [leaseMonthly, setLeaseMonthly] = useState("399");
   const [leaseTerm, setLeaseTerm] = useState("36");
   const [leaseDueAtSigning, setLeaseDueAtSigning] = useState("2500");
 
-  const recorder = useAudioRecorder(
-    RecordingPresets.HIGH_QUALITY
-  );
+  const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
 
   const [audioPlayer, setAudioPlayer] = useState<any>(null);
   const webAudioPlayer = useRef<HTMLAudioElement | null>(null);
 
+  // Keep message persistence in SpacetimeDB without rendering database history
+  // in the app. `conversation` below contains only this session's messages.
+  useEffect(() => {
+    const disconnect = connectToSpacetimeDB(
+      () => {},
+      undefined,
+      undefined,
+      setSavedServiceCenters,
+    );
+
+    return disconnect;
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      try {
+        audioPlayer?.remove();
+      } catch {
+        // Ignore cleanup errors.
+      }
+
+      webAudioPlayer.current?.pause();
+      webAudioPlayer.current = null;
+    };
+  }, [audioPlayer]);
+
   const comparison = calculateComparison({
     currentValue: moneyInput(currentValue, 16000),
     currentRepairsMonthly: moneyInput(repairs, 250),
-    currentMaintenanceYearly: moneyInput(
-      currentMaintenance,
-      700
-    ),
-    currentResaleAfterTenYears: moneyInput(
-      currentResale,
-      5000
-    ),
+    currentMaintenanceYearly: moneyInput(currentMaintenance, 700),
+    currentResaleAfterTenYears: moneyInput(currentResale, 5000),
     newVehiclePrice: moneyInput(newPrice, 32000),
     downPayment: moneyInput(downPayment, 3000),
     apr: moneyInput(apr, 6.5),
@@ -249,17 +280,19 @@ export default function HomeScreen() {
     leaseDueAtSigning: moneyInput(leaseDueAtSigning, 2500),
   });
 
-  useEffect(() => {
-    return () => {
-      try {
-        audioPlayer?.remove();
-      } catch {
-        // Ignore cleanup errors.
-      }
-      webAudioPlayer.current?.pause();
-      webAudioPlayer.current = null;
-    };
-  }, [audioPlayer]);
+  async function saveChatMessage(
+    role: "user" | "assistant",
+    content: string
+  ) {
+    const prefix = role === "user" ? "[USER]" : "[TOYOTA]";
+
+    try {
+      await sendSpacetimeMessage(`${prefix} ${content}`);
+    } catch (error) {
+      console.warn("Could not save chat message:", error);
+      setDbStatus("save failed");
+    }
+  }
 
   async function choosePhoto(useCamera: boolean) {
     try {
@@ -323,6 +356,7 @@ export default function HomeScreen() {
     speakResponse = autoSpeak
   ) {
     const userQuestion = (questionOverride ?? question).trim();
+
     if (!userQuestion && !imageDataUrl) {
       Alert.alert("Add a question", "Ask about your vehicle or add a photo.");
       return;
@@ -334,16 +368,20 @@ export default function HomeScreen() {
 
     try {
       let nearbyServices = "";
+
       if (
         /\b(nearby|nearest|close to me|workshop|service center|dealership|mechanic|repair shop|tow|roadside)\b/i.test(
           userQuestion
         )
       ) {
         setMapLoading(true);
+
         try {
           const finder = await import("../lib/roadsideFinder");
           const result = await finder.findNearestToyotaCenter();
+
           setMapResult(result);
+
           nearbyServices = JSON.stringify({
             nearest: result.nearest,
             otherOptions: result.centers.slice(1, 5),
@@ -361,6 +399,7 @@ export default function HomeScreen() {
 
       const currentPurchasePrice = moneyInput(originalPrice, 28000);
       const currentMarketValue = moneyInput(currentValue, 16000);
+
       const data = await postJSON("/api/analyze", {
         message: userQuestion,
         imageDataUrl: imageDataUrl || undefined,
@@ -378,30 +417,38 @@ export default function HomeScreen() {
         history: conversation.slice(-8),
       });
 
-      setAnalysis(data.answer);
+      const userMessage = userQuestion || "Review this photo.";
+      const assistantMessage = String(data.answer || "");
+
+      setAnalysis(assistantMessage);
       setSpeechBase64("");
       setSpeechStatus("");
-      setConversation((previous): ConversationMessage[] =>
-        [
-          ...previous,
-          {
-            role: "user" as const,
-            content: userQuestion || "Review this photo.",
-          },
-          { role: "assistant" as const, content: data.answer },
-        ].slice(-8)
+
+      const conversationUpdates: ConversationMessage[] = [
+        { role: "user", content: userMessage },
+        { role: "assistant", content: assistantMessage },
+      ];
+      setConversation((previous) =>
+        [...previous, ...conversationUpdates].slice(-8)
       );
-      if (speakResponse && data.answer) {
-        await generateSpeech(data.answer);
+
+      // Save both messages. If the database is unavailable, the AI response
+      // still remains available in the app.
+      await saveChatMessage("user", userMessage);
+
+      if (assistantMessage) {
+        await saveChatMessage("assistant", assistantMessage);
+      }
+
+      if (speakResponse && assistantMessage) {
+        await generateSpeech(assistantMessage);
       }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Analysis failed.";
+
       setAssistantError(message);
-      Alert.alert(
-        "Analysis error",
-        message
-      );
+      Alert.alert("Analysis error", message);
     } finally {
       setMapLoading(false);
       setBusy(false);
@@ -414,6 +461,7 @@ export default function HomeScreen() {
 
     try {
       const data = await postJSON("/api/speak", { text });
+
       if (typeof data.audioBase64 !== "string" || !data.audioBase64) {
         throw new Error("The speech service returned no audio.");
       }
@@ -423,12 +471,10 @@ export default function HomeScreen() {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Could not generate speech.";
+
       setSpeechStatus(message);
       setAssistantError(message);
-      Alert.alert(
-        "Voice error",
-        message
-      );
+      Alert.alert("Voice error", message);
     } finally {
       setSpeechBusy(false);
     }
@@ -443,8 +489,10 @@ export default function HomeScreen() {
     if (Platform.OS === "web") {
       try {
         webAudioPlayer.current?.pause();
+
         const player = new Audio(`data:audio/mpeg;base64,${base64}`);
         webAudioPlayer.current = player;
+
         await player.play();
         setSpeechStatus("Speaking…");
       } catch {
@@ -452,6 +500,7 @@ export default function HomeScreen() {
           "Playback was blocked. Tap “Play spoken answer” and check your device volume."
         );
       }
+
       return;
     }
 
@@ -460,16 +509,12 @@ export default function HomeScreen() {
         allowsRecording: false,
         playsInSilentMode: true,
       });
-      const fileUri =
-        `${FileSystem.cacheDirectory}toyota-response.mp3`;
 
-      await FileSystem.writeAsStringAsync(
-        fileUri,
-        base64,
-        {
-          encoding: FileSystem.EncodingType.Base64,
-        }
-      );
+      const fileUri = `${FileSystem.cacheDirectory}toyota-response.mp3`;
+
+      await FileSystem.writeAsStringAsync(fileUri, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
 
       try {
         audioPlayer?.remove();
@@ -480,9 +525,11 @@ export default function HomeScreen() {
       const player = createAudioPlayer(fileUri);
       setAudioPlayer(player);
       player.play();
+
       setSpeechStatus("Speaking…");
     } catch (error) {
       setSpeechStatus("Speech could not be played.");
+
       Alert.alert(
         "Voice error",
         error instanceof Error ? error.message : "Could not play response."
@@ -546,57 +593,72 @@ export default function HomeScreen() {
       }
     } catch (error) {
       setRecording(false);
+
       const message =
         error instanceof Error ? error.message : "Could not transcribe.";
+
       setAssistantError(message);
+      Alert.alert("Transcription error", message);
+    }
+  }
+
+  async function findNearbyService() {
+    setMapLoading(true);
+    setMapResult(null);
+
+    try {
+      const finder = await import("../lib/roadsideFinder");
+      const result = await finder.findNearestToyotaCenter();
+
+      setMapResult(result);
+
+      if (!API_BASE) {
+        throw new Error(
+          "Set EXPO_PUBLIC_API_URL to your Vercel deployment origin to save service centers."
+        );
+      }
+
+      const response = await fetch(`${API_BASE}/api/service-centers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ centers: result.centers }),
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      const saved: {
+        success?: boolean;
+        saved?: number;
+        errors?: { id?: string; error: string }[];
+      } = await response.json();
+      console.log("SpacetimeDB service-center save result:", saved);
+      if (!response.ok || saved.success !== true) {
+        const details = saved.errors?.map((item) => item.error).join("; ");
+        throw new Error(
+          details || `SpacetimeDB saved ${saved.saved ?? 0} centers, but did not save all results.`,
+        );
+      }
+    } catch (error) {
+      console.error("Nearby service error:", error);
       Alert.alert(
-        "Transcription error",
-        message
+        "Nearby Service",
+        error instanceof Error ? error.message : "Something went wrong."
       );
+    } finally {
+      setMapLoading(false);
     }
   }
-
-  
-async function findNearbyService() {
-  setMapLoading(true);
-  setMapResult(null);
-
-  try {
-    const finder = await import("../lib/roadsideFinder");
-    const result = await finder.findNearestToyotaCenter();
-
-    // Show the results immediately.
-    setMapResult(result);
-
-    // Save the results to SpacetimeDB through Vercel.
-    const response = await fetch("/api/service-centers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ centers: result.centers }),
-    });
-
-    if (!response.ok) {
-      throw new Error(await response.text());
-    }
-
-    const saved = await response.json();
-    console.log("SpacetimeDB save result:", saved);
-  } catch (error) {
-    console.error("Nearby service error:", error);
-    Alert.alert(
-      "Nearby Service",
-      error instanceof Error ? error.message : "Something went wrong."
-    );
-  } finally {
-    setMapLoading(false);
-  }
-}
-
 
   const estimatedValueLoss = Math.max(
     0,
     moneyInput(originalPrice, 28000) - moneyInput(currentValue, 16000)
   );
+
   const maxCost = Math.max(
     comparison.keepTotal,
     comparison.replacementTotal,
@@ -604,11 +666,7 @@ async function findNearbyService() {
     1
   );
 
-  const keepBar = Math.max(
-    3,
-    (comparison.keepTotal / maxCost) * 100
-  );
-
+  const keepBar = Math.max(3, (comparison.keepTotal / maxCost) * 100);
   const replaceBar = Math.max(
     3,
     (comparison.replacementTotal / maxCost) * 100
@@ -625,12 +683,10 @@ async function findNearbyService() {
         <Text style={styles.headerSubtitle}>
           VEHICLE DECISION ASSISTANT
         </Text>
-        <Text style={styles.heading}>
-          Keep it or replace it?
-        </Text>
+        <Text style={styles.heading}>Keep it or replace it?</Text>
         <Text style={styles.subheading}>
-          Understand your vehicle, compare your costs, and make
-          a confident decision.
+          Understand your vehicle, compare your costs, and make a confident
+          decision.
         </Text>
       </View>
 
@@ -642,9 +698,7 @@ async function findNearbyService() {
             <Text style={styles.fieldLabel}>Year</Text>
             <TextInput
               value={vehicle.year}
-              onChangeText={(v) =>
-                setVehicle({ ...vehicle, year: v })
-              }
+              onChangeText={(v) => setVehicle({ ...vehicle, year: v })}
               style={styles.input}
               keyboardType="number-pad"
             />
@@ -654,9 +708,7 @@ async function findNearbyService() {
             <Text style={styles.fieldLabel}>Mileage</Text>
             <TextInput
               value={vehicle.mileage}
-              onChangeText={(v) =>
-                setVehicle({ ...vehicle, mileage: v })
-              }
+              onChangeText={(v) => setVehicle({ ...vehicle, mileage: v })}
               style={styles.input}
               keyboardType="number-pad"
             />
@@ -668,9 +720,7 @@ async function findNearbyService() {
             <Text style={styles.fieldLabel}>Make</Text>
             <TextInput
               value={vehicle.make}
-              onChangeText={(v) =>
-                setVehicle({ ...vehicle, make: v })
-              }
+              onChangeText={(v) => setVehicle({ ...vehicle, make: v })}
               style={styles.input}
             />
           </View>
@@ -679,9 +729,7 @@ async function findNearbyService() {
             <Text style={styles.fieldLabel}>Model</Text>
             <TextInput
               value={vehicle.model}
-              onChangeText={(v) =>
-                setVehicle({ ...vehicle, model: v })
-              }
+              onChangeText={(v) => setVehicle({ ...vehicle, model: v })}
               style={styles.input}
             />
           </View>
@@ -716,6 +764,7 @@ async function findNearbyService() {
               secondary
             />
           </View>
+
           <View style={styles.halfField}>
             <AppButton
               title="Choose photo"
@@ -742,7 +791,7 @@ async function findNearbyService() {
           style={styles.voiceToggle}
         >
           <Text style={styles.voiceToggleText}>
-            {autoSpeak ? "☑" : "☐"}  Speak each assistant reply
+            {autoSpeak ? "☑" : "☐"} Speak each assistant reply
           </Text>
         </Pressable>
 
@@ -754,24 +803,19 @@ async function findNearbyService() {
               disabled={busy}
             />
           </View>
+
           <View style={styles.halfField}>
             <AppButton
-              title={
-                recording
-                  ? "Stop & send"
-                  : "Ask by voice"
-              }
+              title={recording ? "Stop & send" : "Ask by voice"}
               onPress={recording ? stopRecording : startRecording}
+              disabled={busy}
               secondary
             />
           </View>
         </View>
 
         {busy && (
-          <ActivityIndicator
-            color="#55D6BE"
-            style={styles.loader}
-          />
+          <ActivityIndicator color="#55D6BE" style={styles.loader} />
         )}
 
         {assistantError ? (
@@ -784,10 +828,9 @@ async function findNearbyService() {
 
         {analysis ? (
           <View style={styles.answerBox}>
-            <Text style={styles.answerTitle}>
-              VEHICLE ASSISTANT
-            </Text>
+            <Text style={styles.answerTitle}>LATEST VEHICLE ANALYSIS</Text>
             <Text style={styles.answerText}>{analysis}</Text>
+
             <AppButton
               title={
                 speechBusy
@@ -802,6 +845,7 @@ async function findNearbyService() {
               disabled={speechBusy}
               secondary
             />
+
             {speechStatus ? (
               <Text accessibilityLiveRegion="polite" style={styles.muted}>
                 {speechStatus}
@@ -809,21 +853,17 @@ async function findNearbyService() {
             ) : null}
           </View>
         ) : null}
+
       </View>
 
       <View style={styles.card}>
-        <Text style={styles.sectionTitle}>
-          02 / FINANCIAL COMPARISON
-        </Text>
+        <Text style={styles.sectionTitle}>02 / FINANCIAL COMPARISON</Text>
 
         <Text style={styles.muted}>
-          Edit these assumptions to calculate your estimated
-          10-year costs.
+          Edit these assumptions to calculate your estimated 10-year costs.
         </Text>
 
-        <Text style={styles.subsectionTitle}>
-          KEEP CURRENT VEHICLE
-        </Text>
+        <Text style={styles.subsectionTitle}>KEEP CURRENT VEHICLE</Text>
 
         <NumberField
           label="Original purchase price when new ($)"
@@ -853,9 +893,7 @@ async function findNearbyService() {
 
         <View style={styles.divider} />
 
-        <Text style={styles.subsectionTitle}>
-          REPLACE WITH NEW VEHICLE
-        </Text>
+        <Text style={styles.subsectionTitle}>REPLACE WITH NEW VEHICLE</Text>
 
         <NumberField
           label="New vehicle price ($)"
@@ -890,14 +928,13 @@ async function findNearbyService() {
 
         <View style={styles.divider} />
 
-        <Text style={styles.subsectionTitle}>
-          LEASE A REPLACEMENT
-        </Text>
+        <Text style={styles.subsectionTitle}>LEASE A REPLACEMENT</Text>
         <Text style={styles.muted}>
           Enter an actual offer if you have one. Lease estimates assume
           continuous leases across 10 years and do not include mileage,
           disposition, or excess-wear fees.
         </Text>
+
         <NumberField
           label="Estimated lease payment per month ($)"
           value={leaseMonthly}
@@ -922,11 +959,12 @@ async function findNearbyService() {
             {formatMoney(estimatedValueLoss)}
           </Text>
           <Text style={styles.muted}>
-            Based only on your entered original price and current value;
-            this is not a market valuation.
+            Based only on your entered original price and current value; this
+            is not a market valuation.
           </Text>
 
           <View style={styles.divider} />
+
           <Text style={styles.answerTitle}>
             ESTIMATED MONTHLY LOAN PAYMENT
           </Text>
@@ -940,7 +978,6 @@ async function findNearbyService() {
           <Text style={styles.resultNumber}>
             {formatMoney(comparison.keepTotal)}
           </Text>
-
           <View style={styles.barBackground}>
             <View
               style={[
@@ -956,7 +993,6 @@ async function findNearbyService() {
           <Text style={styles.resultNumber}>
             {formatMoney(comparison.replacementTotal)}
           </Text>
-
           <View style={styles.barBackground}>
             <View
               style={[
@@ -996,38 +1032,50 @@ async function findNearbyService() {
         </View>
 
         <Text style={styles.disclaimer}>
-          Estimates only. This is not a dealer quote, guaranteed
-          resale value, credit decision, or financial advice.
-          Verify vehicle values, financing, fees, and ownership
-          expenses before deciding.
+          Estimates only. This is not a dealer quote, guaranteed resale value,
+          credit decision, or financial advice. Verify vehicle values,
+          financing, fees, and ownership expenses before deciding.
         </Text>
       </View>
 
       <View style={styles.card}>
-        <Text style={styles.sectionTitle}>
-          03 / NEARBY SERVICE
-        </Text>
+        <Text style={styles.sectionTitle}>03 / NEARBY SERVICE</Text>
 
         <Text style={styles.muted}>
-          Find nearby Toyota-related service options using your
-          existing location finder.
+          Find nearby Toyota-related service options using your existing
+          location finder.
         </Text>
 
         <AppButton
-          title={
-            mapLoading
-              ? "Searching..."
-              : "Find nearby service"
-          }
+          title={mapLoading ? "Searching..." : "Find nearby service"}
           onPress={findNearbyService}
           disabled={mapLoading}
         />
 
+        <View style={styles.answerBox}>
+          <Text style={styles.answerTitle}>
+            SAVED SERVICE CENTERS ({savedServiceCenters.length})
+          </Text>
+          {savedServiceCenters.length === 0 ? (
+            <Text style={styles.muted}>
+              No service centers have synced from SpacetimeDB yet.
+            </Text>
+          ) : (
+            savedServiceCenters.map((center) => (
+              <View key={center.placeId} style={styles.chatMessage}>
+                <Text style={styles.answerTitle}>{center.name}</Text>
+                <Text style={styles.answerText}>{center.address}</Text>
+                <Text style={styles.muted}>
+                  {center.authorizationStatus} · {center.source}
+                </Text>
+              </View>
+            ))
+          )}
+        </View>
+
         {mapResult?.nearest ? (
           <View style={styles.answerBox}>
-            <Text style={styles.answerTitle}>
-              NEAREST RESULT
-            </Text>
+            <Text style={styles.answerTitle}>NEAREST RESULT</Text>
             <Text style={styles.resultNumber}>
               {mapResult.nearest.name}
             </Text>
@@ -1039,11 +1087,11 @@ async function findNearbyService() {
                 ? `${mapResult.nearest.drivingDistanceMiles.toFixed(1)} driving miles`
                 : `${mapResult.nearest.distanceMiles.toFixed(1)} miles`}
             </Text>
+
             {mapResult.usedFallback ? (
               <Text style={styles.disclaimer}>
-                No Toyota-related listing was found. This is a
-                nearby repair-shop fallback, not a verified
-                official Toyota center.
+                No Toyota-related listing was found. This is a nearby
+                repair-shop fallback, not a verified official Toyota center.
               </Text>
             ) : null}
           </View>
@@ -1219,6 +1267,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#2B4659",
+  },
+  chatMessage: {
+    marginTop: 14,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: "#26354B",
   },
   errorBox: {
     marginTop: 14,

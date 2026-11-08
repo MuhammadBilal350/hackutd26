@@ -1,4 +1,5 @@
-import { schema, table, t } from 'spacetimedb/server';
+
+import { schema, table, t } from "spacetimedb/server";
 
 const spacetimedb = schema({
   person: table(
@@ -7,19 +8,29 @@ const spacetimedb = schema({
       name: t.string(),
     }
   ),
+
+  message: table(
+    { public: true },
+    {
+      sender: t.identity(),
+      sent: t.timestamp(),
+      text: t.string(),
+    }
+  ),
 });
+
 export default spacetimedb;
 
-export const init = spacetimedb.init(_ctx => {
-  // Called when the module is initially published
+export const init = spacetimedb.init((_ctx) => {
+  console.info("Toyota Assistant database initialized");
 });
 
-export const onConnect = spacetimedb.clientConnected(_ctx => {
-  // Called every time a new client connects
+export const onConnect = spacetimedb.clientConnected((_ctx) => {
+  console.info("Client connected");
 });
 
-export const onDisconnect = spacetimedb.clientDisconnected(_ctx => {
-  // Called every time a client disconnects
+export const onDisconnect = spacetimedb.clientDisconnected((_ctx) => {
+  console.info("Client disconnected");
 });
 
 export const add = spacetimedb.reducer(
@@ -29,9 +40,21 @@ export const add = spacetimedb.reducer(
   }
 );
 
-export const sayHello = spacetimedb.reducer(ctx => {
+export const send_message = spacetimedb.reducer(
+  { text: t.string() },
+  (ctx, { text }) => {
+    ctx.db.message.insert({
+      sender: ctx.sender,
+      sent: ctx.timestamp,
+      text,
+    });
+  }
+);
+
+export const sayHello = spacetimedb.reducer((ctx) => {
   for (const person of ctx.db.person.iter()) {
     console.info(`Hello, ${person.name}!`);
   }
-  console.info('Hello, World!');
+
+  console.info("Hello, World!");
 });

@@ -30,6 +30,11 @@ npm run start
    public values are embedded into the Expo web build; redeploy after changing
    them. Use the same `EXPO_PUBLIC_API_URL` in a local `.env` when testing a
    native app against the deployed API.
+   SpacetimeDB uses the public Maincloud endpoint and database name shown in
+   `.env.example` by default. Override them with
+   `EXPO_PUBLIC_SPACETIMEDB_HOST` and `EXPO_PUBLIC_SPACETIMEDB_DATABASE` only
+   when targeting another deployment. Never put an administrative SpacetimeDB
+   token in an `EXPO_PUBLIC_` variable.
 5. Deploy. The health endpoint is `/api/health`; the app uses `/api/analyze`,
    `/api/speak`, and `/api/transcribe`.
 
@@ -43,6 +48,25 @@ turns to the NVIDIA reasoning model. ElevenLabs transcribes voice questions and
 speaks replies. When a question asks for a nearby workshop, the app calls the
 existing Geoapify finder with device location and passes its result to the
 assistant; the LLM does not have direct access to device location or Maps.
+
+The app connects directly to SpacetimeDB for live `user`, `message`, and
+`toyota_service_center` subscriptions and reducer calls. The deployed `message`
+table is public, so messages are visible to clients allowed to subscribe; do not
+use it for private or sensitive conversation data. Vercel deployment does not
+publish the SpacetimeDB module. Module publishing must be performed separately
+after checking production schema and migration compatibility.
+
+To inspect production before a module publish, run from this project directory:
+
+```sh
+spacetime describe toyotautd-b9e7n --server maincloud --json
+spacetime publish toyotautd-b9e7n --server maincloud --module-path spacetime-chat/spacetimedb
+```
+
+Review the publisher's schema migration prompt carefully and stop if it proposes
+dropping or rewriting existing data. Do not add `--delete-data` or `--yes` for
+this production database. Neither Vercel deployment nor an Expo export runs
+these commands.
 
 ## Estimates and limitations
 
