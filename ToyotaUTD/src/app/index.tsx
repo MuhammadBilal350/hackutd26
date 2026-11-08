@@ -556,25 +556,42 @@ export default function HomeScreen() {
     }
   }
 
-  async function findNearbyService() {
-    setMapLoading(true);
-    setMapResult(null);
+  
+async function findNearbyService() {
+  setMapLoading(true);
+  setMapResult(null);
 
-    try {
-      // Reuse the existing Geoapify finder.
-      const finder = await import("../lib/roadsideFinder");
-      const result = await finder.findNearestToyotaCenter();
+  try {
+    const finder = await import("../lib/roadsideFinder");
+    const result = await finder.findNearestToyotaCenter();
 
-      setMapResult(result);
-    } catch (error) {
-      Alert.alert(
-        "Service search error",
-        error instanceof Error ? error.message : "Could not find service."
-      );
-    } finally {
-      setMapLoading(false);
+    // Show the results immediately.
+    setMapResult(result);
+
+    // Save the results to SpacetimeDB through Vercel.
+    const response = await fetch("/api/service-centers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ centers: result.centers }),
+    });
+
+    if (!response.ok) {
+      throw new Error(await response.text());
     }
+
+    const saved = await response.json();
+    console.log("SpacetimeDB save result:", saved);
+  } catch (error) {
+    console.error("Nearby service error:", error);
+    Alert.alert(
+      "Nearby Service",
+      error instanceof Error ? error.message : "Something went wrong."
+    );
+  } finally {
+    setMapLoading(false);
   }
+}
+
 
   const estimatedValueLoss = Math.max(
     0,
