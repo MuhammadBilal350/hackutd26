@@ -25,7 +25,10 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
-from generate_dataset import COLORS, LIGHTS, MESSAGE_LIGHTS, draw_icon
+if __package__:
+    from .generate_dataset import COLORS, LIGHTS, MESSAGE_LIGHTS, draw_icon
+else:
+    from generate_dataset import COLORS, LIGHTS, MESSAGE_LIGHTS, draw_icon
 
 HERE = Path(__file__).resolve().parent
 REF_DIR = HERE / "icon_refs"
