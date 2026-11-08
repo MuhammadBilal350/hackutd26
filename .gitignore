@@ -15,6 +15,15 @@ captures/
 .venv-exterior/
 .cache-exterior/
 exterior_data/
+exterior_data_lite/
 exterior_models/
 exterior_runs/
 .tls-exterior/
+
+# Local credentials and environment overrides (examples contain placeholders only).
+.env*
+**/.env*
+!.env.example
+!**/.env.example
+*.pem
+*.key
