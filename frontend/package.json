@@ -14,7 +14,8 @@
     "lucide-react": "^0.468.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-native-web": "^0.21.2"
+    "react-native-web": "^0.21.2",
+    "spacetimedb": "^2.14.1"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
@@ -22,6 +23,7 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@types/react-native-web": "^0.19.2",
+    "@vercel/node": "^30.0.0",
     "@vitejs/plugin-react": "^5.0.0",
     "jsdom": "^26.1.0",
     "typescript": "~5.9.3",
