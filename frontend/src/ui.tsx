@@ -31,7 +31,7 @@ export function Segments({items,value,onChange,label}:{items:string[];value:stri
 export function Progress({percent,color=red}:{percent:number;color?:string}) {return <Box ui="progress"><Box style={{width:`${percent}%`,background:color}}/></Box>;}
 export function Badge({children,tone='amber'}:{children:ReactNode;tone?:string}) {return <Txt ui="tag" style={{color:`var(--${tone})`,background:`var(--${tone}bg)`}}>{children}</Txt>;}
 export function IconBox({children,color='red'}:{children:ReactNode;color?:string}) {return <Box ui="icon-box" style={{color:color==='red'?red:`var(--${color})`,background:color==='red'?'var(--rose)':`var(--${color}bg)`}}>{children}</Box>;}
-export function ScoreRing() {return <div className="ring"><svg viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="48" fill="none" stroke="var(--line)" strokeWidth="9"/><circle cx="55" cy="55" r="48" fill="none" stroke={red} strokeWidth="9" strokeDasharray="223 302" strokeLinecap="round"/></svg><div className="ring-center"><strong>7.4</strong><small>of 10</small></div></div>;}
+export function ScoreRing({score=7.4}:{score?:number|null}) {return <div className="ring"><svg viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="48" fill="none" stroke="var(--line)" strokeWidth="9"/><circle cx="55" cy="55" r="48" fill="none" stroke={red} strokeWidth="9" strokeDasharray={`${(score??0)*30.2} 302`} strokeLinecap="round"/></svg><div className="ring-center"><strong>{score===null?'—':score.toFixed(1)}</strong><small>of 10</small></div></div>;}
 export function Toyota() {return <img className="toyota" src="/toyota-logo-transparent.png" width="60" height="44" alt="Toyota"/>;}
 
 
